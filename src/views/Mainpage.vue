@@ -1,18 +1,18 @@
 <template>
 
 
-    <Loginpage />
+    <Sidebar />
 
 </template>
 
 <script>
 // @ is an alias to /src
-import Loginpage from '@/components/login/Loginpage.vue'
+import Sidebar from '@/components/Mainpage/Sidebar.vue'
 
 export default {
   name: 'Login',
   components: {
-    Loginpage
+    Sidebar
   }
 }
 </script>
