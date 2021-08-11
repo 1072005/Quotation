@@ -8,6 +8,7 @@
         placeholder="請輸入帳號"
         type="email"
         v-model="Account"
+        @keyup.native="btKeyUp"
       />
       <p>密碼</p>
       <mdb-input
@@ -15,6 +16,7 @@
         placeholder="請輸入密碼"
         :type="typ"
         v-model="Password"
+        @keyup.native="btKeyUp"
       />
       <font-awesome-icon
         class="eyeicon"
@@ -23,14 +25,22 @@
         @click="iconclick"
         @mouseleave="iconleave"
       />
-      <p class="message" v-show="isShow">帳號或密碼錯誤</p>
+      <p>公司統一編號</p>
+      <mdb-input
+        icon="lock"
+        placeholder="請輸入公司統一編號"
+        type="text"
+        v-model="company_id"
+        @keyup.native="btKeyUp"
+      />
+      <p class="message" v-show="isShow">{{message}}</p>
       <div class="text-center inbtn">
         <b-button variant="primary" class="col-12" @click="postdata"
-          >登入</b-button
+          >註冊</b-button
         >
       </div>
-      <p class="register">第一次使用?</p>
-      <b-link href="#register">立即註冊</b-link>
+      <p class="register">已經有帳號?</p>
+      <b-link href="/">登入</b-link>
     </div>
   </form>
 </template>
@@ -46,32 +56,44 @@ export default {
     return {
       typ: "password",
       isShow: "",
+      inShow: "",
       Account: "",
       Password: "",
+      company_id: "",
+      message:''
     };
   },
   methods: {
     iconclick() {
-        this.typ = "text";
+      this.typ = "text";
     },
     iconleave() {
-        this.typ = "password";
+      this.typ = "password";
+    },
+    btKeyUp(e) {
+      e.target.value = e.target.value.replace(
+        /[`~!@#$%^&*()_\-+=<>?:"{}|,./;'\\[\]·~！@#￥%……&*（）——\-+={}|《》？：“”【】、；‘’，。、]/g,
+        ""
+      );
     },
     postdata() {
       let parms = {
         Account: this.Account,
         Password: this.Password,
+        company_id:this.company_id
       };
 
       const that = this;
       this.$axios
-        .post("https://ca789119eb3c.ngrok.io/api/signin", parms)
+        .post("https://f76de51a21c8.ngrok.io/api/signup", parms)
         .then(function (response) {
           console.log(response);
-          if (response.data.success == true) {
-            that.$router.push({ path: "Mainpage" });
+          if (response.data.status_Code == 2000) {
+              alert('註冊成功')
+           that.$router.push({ path: "/" });
           } else {
             that.isShow = "false";
+            that.message=response.data.message
           }
         })
         .catch(function (error) {
@@ -85,7 +107,7 @@ export default {
 <style scoped lang="scss">
 .grey-text {
   width: 20%;
-  height: 450px;
+  height: 520px;
   margin: 0 auto;
   padding: 20px;
   background-color: white;
@@ -123,3 +145,4 @@ form {
   font-size: 1rem !important;
 }
 </style>
+
