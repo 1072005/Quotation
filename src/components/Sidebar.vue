@@ -28,7 +28,7 @@ export default {
   mounted() {
       const that=this;
     this.$axios
-      .get("https://f76de51a21c8.ngrok.io/api/signin")
+      .get("https://4b647e72ace5.ngrok.io/api/signin")
       .then(function (response) {
         console.log(response);
         that.account_id=response.data.account;
