@@ -15,7 +15,7 @@
         <b-col md="9" class="main">
           <b-col class="inbox" id="my-table"
             :items="items"
-            :per-page="items/6"
+            :per-page="perPage"
             :current-page="currentPage"
             small
             v-for="(item,index)  in items" :key="item.id"
