@@ -85,7 +85,7 @@ export default {
 
       const that = this;
       this.$axios
-        .post("https://f76de51a21c8.ngrok.io/api/signup", parms)
+        .post("https://c95d5df9aa5a.ngrok.io/api/signup", parms)
         .then(function (response) {
           console.log(response);
           if (response.data.status_Code == 2000) {
