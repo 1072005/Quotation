@@ -19,27 +19,36 @@
             )"
             :key="item.id"
           >
-            <div class="Specification">{{ item.produce }}</div>
+            <div class="Specification">
+              <div class="innerdiv"  :title="item.product_Name">
+                {{ item.product_Name }}
+              </div>
+            </div>
             <div class="producemoney">
-              {{ item.money }}
-
+              <div class="innerdiv" :title="item.price">
+                {{ item.price }}
+              </div>
             </div>
 
             <div class="edit">
+              <div class="mainicon">
               <font-awesome-icon
                 class="penicon"
                 :icon="['fas', 'pen']"
                 style="color: black"
                 size="4x"
               />
+              </div>
             </div>
             <div class="delete">
+              <div class="mainicon">
               <font-awesome-icon
                 class="trashicon"
                 :icon="['fas', 'trash']"
                 style="color: black"
                 size="4x"
               />
+              </div>
             </div>
           </b-col>
           <b-pagination
@@ -70,16 +79,7 @@ export default {
       perPage: 6,
       currentPage: 1,
       items: [
-        {
-          produce: '產品規格',
-          money: "產品單價",
-          
-        },
-        { produce: '產品規格', money: "產品單價",  },
-        { produce: '產品規格', money: "產品單價",  },
-        { produce: '產品規格', money: "產品單價",  },
-
-
+      
       ],
     };
   },
@@ -87,6 +87,21 @@ export default {
     rows() {
       return this.items.length;
     },
+  },
+    mounted() {
+    //  const that=this
+    this.$axios
+      .get("https://d42ab6f4f646.ngrok.io/api/products")
+      .then((response) => {
+        this.items = response.data.data;
+
+        console.log("apistart");
+        console.log(this.items);
+      })
+      .catch(function (error) {
+        // 请求失败处理
+        console.log(error);
+      });
   },
 };
 </script>
@@ -97,7 +112,7 @@ export default {
   background-color: white !important;
 }
 .rightside h1 {
-  margin-top: 3%;
+  margin-top: 25px;
   margin-left: 20px;
   font-weight: bold;
 }
@@ -107,7 +122,7 @@ export default {
 }
 .Specification {
   display: inline-block;
-  width: 54%;
+  width: 763px;
   height: 100px;
   text-align: center;
   line-height: 100px;
@@ -116,7 +131,7 @@ export default {
 }
 .producemoney {
   display: inline-block;
-  width: 30%;
+  width: 425px;
   height: 100px;
   text-align: center;
   line-height: 100px;

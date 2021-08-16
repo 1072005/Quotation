@@ -19,32 +19,43 @@
             )"
             :key="item.id"
           >
-            <div class="dateleft">{{ item.quotation_ID }}</div>
+            <div class="dateleft">
+              <div class="innerdiv" >{{ item.quotation_ID }}</div>
+            </div>
 
             <div class="produce">
-              {{ item.produce_Name }}
+              <div class="innerdiv" :title="item.produce_Name">
+                {{ item.produce_Name }}
+              </div>
             </div>
-            <div class="ispay">{{ item.ispay }}</div>
+            <div class="ispay">
+              <div class="innerdiv" :title="item.ispay">{{ item.ispay }}</div>
+            </div>
             <div class="remark">
-              {{ item.remark }}
+              <div class="innerdiv"  :title="item.remark">
+                {{ item.remark }}
+              </div>
             </div>
             <div class="back">
-              <input id="fileUpload" type="file" hidden /><font-awesome-icon
-                class="uploadicon"
-                :icon="['fas', 'cloud-upload-alt']"
-                style="color: black"
-                size="4x"
-                @click="chooseFiles()"
-              />
+              <div class="mainicon">
+                <font-awesome-icon
+                  class="uploadicon"
+                  :icon="['fas', 'cloud-upload-alt']"
+                  style="color: black"
+                  size="4x"
+                />
+              </div>
             </div>
 
             <div class="delete">
-              <font-awesome-icon
-                class="trashicon"
-                :icon="['fas', 'trash']"
-                style="color: black"
-                size="4x"
-              />
+              <div class="mainicon">
+                <font-awesome-icon
+                  class="trashicon"
+                  :icon="['fas', 'trash']"
+                  style="color: black"
+                  size="4x"
+                />
+              </div>
             </div>
           </b-col>
           <b-pagination
@@ -80,10 +91,20 @@ export default {
           quotation_ID: 20201001,
           produce_Name: "專案名稱",
           ispay: "付款狀態",
-          remark:"備註"
+          remark: "備註",
         },
-        { quotation_ID: 20201002, produce_Name: "專案名稱", ispay: "付款狀態",remark:"備註" },
-        { quotation_ID: 20201003, produce_Name: "專案名稱", ispay: "付款狀態",remark:"備註" },
+        {
+          quotation_ID: 20201002,
+          produce_Name: "專案名稱",
+          ispay: "付款狀態",
+          remark: "備註",
+        },
+        {
+          quotation_ID: 20201003,
+          produce_Name: "專案名稱",
+          ispay: "付款狀態",
+          remark: "備註",
+        },
       ],
       product: [],
       file: null,
@@ -116,7 +137,7 @@ export default {
 <style >
 .remark {
   display: inline-block;
-  width: 29%;
+  width: 416px;
   height: 100px;
   text-align: center;
   line-height: 100px;
@@ -125,7 +146,7 @@ export default {
 }
 .ispay {
   display: inline-block;
-  width: 15%;
+  width: 213px;
   height: 100px;
   text-align: center;
   line-height: 100px;
