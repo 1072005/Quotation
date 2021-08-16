@@ -6,7 +6,7 @@
         ><p>{{ account_id }}</p></b-col
       >
       <b-col md-3
-        ><b-button @click="newpage">
+        ><b-button  @click="$router.push('formtype')">
           <font-awesome-icon
             class="sideicon"
             :icon="['fas', 'file']"

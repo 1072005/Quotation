@@ -21,8 +21,6 @@ import {faFile} from '@fortawesome/free-solid-svg-icons'
 import {faSignal} from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
 import { library } from '@fortawesome/fontawesome-svg-core'
-import axios from 'axios'
-import VueAxios from 'vue-axios'
 import qs from 'qs'
 
 // Make BootstrapVue available throughout your project

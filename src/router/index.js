@@ -1,6 +1,4 @@
 import Vue from 'vue'
-import axios from 'axios'
-import VueAxios from 'vue-axios'
 import VueRouter from 'vue-router'
 import Login from '../views/Login.vue'
 import Form from '../views/Form.vue'
@@ -15,9 +13,7 @@ import  trackpage from '../views/Trackpage.vue'
 import  reviseproduce from '../views/Reviseproduce.vue'
 
 Vue.use(VueRouter)
-Vue.prototype.$axios = axios;
 
-Vue.use(VueAxios, axios)
 
 const routes = [
   {
@@ -54,7 +50,8 @@ const routes = [
     path: '/review',
     name: 'Review',
     component: Review
-  }
+  },
+  {
     path: '/Mainpage',
     name: 'Mainpage',
     component:Mainpage
