@@ -1,6 +1,11 @@
 import Vue from 'vue'
 import VueRouter from 'vue-router'
 import Login from '../views/Login.vue'
+import Form from '../views/Form.vue'
+import FormType from '../views/FormType.vue'
+import EditClient from '../views/EditClient.vue'
+import EditProduct from '../views/EditProduct.vue'
+import Review from '../views/Review.vue'
 import Mainpage from '../views/Mainpage.vue'
 import register from '../views/Register.vue'
 import  customerprofile from '../views/CustomerProfile'
@@ -9,11 +14,42 @@ import  reviseproduce from '../views/Reviseproduce.vue'
 
 Vue.use(VueRouter)
 
+
 const routes = [
   {
     path: '/',
     name: 'Login',
     component: Login
+  },
+  {
+    path: '/about',
+    name: 'About',
+    
+  },
+  {
+    path: '/form',
+    name: 'Form',
+    component: Form
+  },  
+  {
+    path: '/formtype',
+    name: 'FormType',
+    component: FormType
+  },
+  {
+    path: '/editclient',
+    name: 'EditClient',
+    component: EditClient
+  },
+  {
+    path: '/editproduct',
+    name: 'EditProduct',
+    component: EditProduct
+  },
+  {
+    path: '/review',
+    name: 'Review',
+    component: Review
   },
   {
     path: '/Mainpage',
