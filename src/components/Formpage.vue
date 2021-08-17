@@ -53,37 +53,44 @@
       <b-row>
         <b-col>
           <label for="input-product-format">產品規格</label>
-          <b-form-input list="product-format" id="input-product-format"></b-form-input>
+          <b-form-input v-model="format" list="product-format" id="input-product-format"></b-form-input>
         </b-col>
         <b-col>
           <label for="input-product-details">細項</label>
-          <b-form-input list="product-details" id="input-product-details"></b-form-input>
+          <b-form-input v-model="details" list="product-details" id="input-product-details"></b-form-input>
         </b-col>
       </b-row>
       <b-row>
         <b-col>
           <label for="input-product-amount">數量</label>
-          <b-form-input list="product-amount" id="input-product-amount"></b-form-input>
+          <b-form-input v-model="amount" list="product-amount" id="input-product-amount"></b-form-input>
         </b-col>
         <b-col>
           <label for="input-product-unit-price">單價</label>
-          <b-form-input list="product-unit-price" id="input-product-unit-price"></b-form-input>
+          <b-form-input v-model="unit_price" list="product-unit-price" id="input-product-unit-price"></b-form-input>
         </b-col>
         <b-col>
           <label for="input-product-discount-price">特價</label>
-          <b-form-input list="product-discount-price" id="input-product-discount-price"></b-form-input>
+          <b-form-input v-model="discount_price" list="product-discount-price" id="input-product-discount-price"></b-form-input>
         </b-col>
         <b-col>
           <label for="input-product-subtotal">小計</label>
-          <b-form-input list="product-subtotal" id="input-product-subtotal"></b-form-input>
+          <b-form-input v-model="product_subtotal" list="product-subtotal" id="input-product-subtotal"></b-form-input>
+        </b-col>
+        <b-col>
+          <b-button variant="outline-primary" id="plus">增加</b-button>
         </b-col>
       </b-row>
 
       <br>
+      <b-row>
+          <b-table :items="items" :fields="fields" bordered align="center"></b-table>
+      </b-row>
+      <br>
 
       <b-row>
         <b-col>
-          <label for="input-subtotal">小計</label>
+          <label for="input-subtotal">總計</label>
           <b-form-input list="client-subtotal" id="input-subtotal"></b-form-input>
         </b-col>
         <b-col>
@@ -92,7 +99,7 @@
         </b-col>
         <b-col>
           <label for="input-total">總額(含稅)</label>
-          <b-form-input v-modal="total" list="total" id="input]-total"></b-form-input>
+          <b-form-input v-modal="total" list="total" id="input-total"></b-form-input>
         </b-col>
       </b-row>
       
@@ -147,7 +154,26 @@ export default{
   data(){
     return{
       Client_names : [],
-      Client_companys : [],
+      Client_companys : [], fields: [ 
+                { key: 'ID', label: '品名編號' },
+                { key: 'format', label: '產品規格' },
+                { key: 'amount', label: '數量' },
+                { key: 'unit_price', label: '單價' },
+                { key: 'discount_price', label: '特價(未稅)' },
+                { key: 'subtotal', label: '小計' },
+                { key: 'delete', label: '刪除' }
+              ],
+      items: [
+          { ID: 1, 
+            format: this.format + this.details,
+            amount: this.amount,
+            unit_price: this.unit_price,
+            discount_price: this.discount_price,
+            subtotal: this.discount * this.amount,
+            delete: "刪除"
+           },
+        ]
+    
     }
   },
 
@@ -167,7 +193,7 @@ export default{
         Search_In: this.Search_In
       }
 
-       this.$axios.get('https://c95d5df9aa5a.ngrok.io/api/customers',search_Costomers)
+       this.$axios.get('https://d42ab6f4f646.ngrok.io/api/customers?'+search_Costomers)
       .then(function (response) {
         console.log(response);
       })
@@ -184,7 +210,7 @@ export default{
         Search: this.Product_Name
       }
 
-     this.$axios.get('https://c95d5df9aa5a.ngrok.io/api/products',search_Products)
+     this.$axios.get('https://d42ab6f4f646.ngrok.io/api/products',search_Products)
       .then(function (response) {
         console.log(response);
       })
@@ -192,7 +218,6 @@ export default{
         console.log(error);
       }); 
     },
-
     postform(){
 
       let form={
@@ -230,7 +255,7 @@ export default{
         }
       };
 
-      this.$axios.post('https://c95d5df9aa5a.ngrok.io/api/quotation',form)
+      this.$axios.post('https://d42ab6f4f646.ngrok.io/api/quotation',form)
       .then(function (response) {
         console.log(response);
       })
@@ -255,5 +280,8 @@ export default{
   box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
   border-radius: 30px;
   padding:5%
+}
+#plus{
+  margin:23px
 }
 </style>
