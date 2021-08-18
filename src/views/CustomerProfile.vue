@@ -13,33 +13,44 @@
             class="inbox"
             id="my-table"
             small
-            v-for="item in items.slice(
+            v-for="(item, index) in items.slice(
               (this.currentPage - 1) * this.perPage,
               this.currentPage * this.perPage
             )"
             :key="item.id"
           >
-            <div class="customername">{{ item.company_Name }}</div>
+            <div class="customername">
+              <div class="innerdiv" :title="item.customer_Name">
+                {{ item.customer_Name }}
+              </div>
+            </div>
             <div class="customerproduce">
-              {{ item.product_Name }}
-
+              <div class="innerdiv" :title="item.company_Name">
+                {{ item.company_Name }}
+              </div>
             </div>
 
             <div class="edit">
-              <font-awesome-icon
-                class="penicon"
-                :icon="['fas', 'pen']"
-                style="color: black"
-                size="4x"
-              />
+              <div class="mainicon">
+                <font-awesome-icon
+                  class="penicon"
+                  :icon="['fas', 'pen']"
+                  style="color: black"
+                  size="4x"
+                  @click="editclient(item.customer_ID)"
+                />
+              </div>
             </div>
             <div class="delete">
-              <font-awesome-icon
-                class="trashicon"
-                :icon="['fas', 'trash']"
-                style="color: black"
-                size="4x"
-              />
+              <div class="mainicon">
+                <font-awesome-icon
+                  class="trashicon"
+                  :icon="['fas', 'trash']"
+                  style="color: black"
+                  size="4x"
+                  @click="deletedata(index)"
+                />
+              </div>
             </div>
           </b-col>
           <b-pagination
@@ -69,27 +80,53 @@ export default {
     return {
       perPage: 6,
       currentPage: 1,
-      items: [
-        {
-          quotation_ID: 20201026,
-          company_Name: "Fred",
-          product_Name: "Flintstone",
-        },
-        { quotation_ID: 2, company_Name: "Wilma", product_Name: "Flintstone" },
-        { quotation_ID: 3, company_Name: "Barney", product_Name: "Rubble" },
-        { quotation_ID: 3, company_Name: "Barney", product_Name: "Rubble" },
-        { quotation_ID: 3, company_Name: "Barney", product_Name: "Rubble" },
-        { quotation_ID: 3, company_Name: "Barney", product_Name: "Rubble" },
-        { quotation_ID: 3, company_Name: "Barney", product_Name: "Rubble" },
-        { quotation_ID: 3, company_Name: "Barney", product_Name: "Rubble" },
-        { quotation_ID: 2, company_Name: "Wilma", product_Name: "Flintstone" },
-
-      ],
+      items: [],
     };
+  },
+  mounted() {
+    //  const that=this
+    this.$axios
+      .get("https://8dddbfe2067c.ngrok.io/api/customer")
+      .then((response) => {
+        this.items = response.data.data;
+
+        console.log("apistart");
+        console.log(this.items);
+      })
+      .catch(function (error) {
+        // 请求失败处理
+        console.log(error);
+      });
   },
   computed: {
     rows() {
       return this.items.length;
+    },
+  },
+  methods: {
+    editclient(CustomerID) {
+      const that = this;
+      const customer = {
+        CustomerID: CustomerID,
+      };
+      
+      localStorage.setItem("customerdata", JSON.stringify(customer));
+      that.$router.push({ path: "editclient" });
+    },
+    deletedata(index) {
+      console.log(this.items[index].customer_ID);
+      this.$axios
+        .delete(
+          "https://8dddbfe2067c.ngrok.io/api/customer/" +
+            this.items[index].customer_ID
+        )
+        .then(function (response) {
+          window.location.reload();
+          console.log(response);
+        })
+        .catch(function (error) {
+          console.log(error);
+        });
     },
   },
 };
@@ -101,7 +138,7 @@ export default {
   background-color: white !important;
 }
 .rightside h1 {
-  margin-top: 3%;
+  margin-top: 25px;
   margin-left: 20px;
   font-weight: bold;
 }
@@ -111,7 +148,7 @@ export default {
 }
 .customername {
   display: inline-block;
-  width: 25%;
+  width: 344px;
   height: 100px;
   text-align: center;
   line-height: 100px;
@@ -120,7 +157,7 @@ export default {
 }
 .customerproduce {
   display: inline-block;
-  width: 59%;
+  width: 837px;
   height: 100px;
   text-align: center;
   line-height: 100px;

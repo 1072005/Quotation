@@ -6,7 +6,7 @@
         ><p>{{ account_id }}</p></b-col
       >
       <b-col md-3
-        ><b-button  @click="$router.push('formtype')">
+        ><b-button  @click="$router.push('formtype').catch(()=>{})">
           <font-awesome-icon
             class="sideicon"
             :icon="['fas', 'file']"
@@ -15,7 +15,7 @@
         ></b-col
       >
       <b-col md-3
-        ><b-button @click="$router.push('Mainpage')">
+        ><b-button @click="$router.push('Mainpage').catch(()=>{})">
           <font-awesome-icon
             class="sideicon"
             :icon="['fas', 'file-alt']"
@@ -24,7 +24,7 @@
         ></b-col
       >
       <b-col md-3>
-        <b-button @click="$router.push('customerprofile')"
+        <b-button @click="$router.push('customerprofile').catch(()=>{})"
           ><font-awesome-icon
             class="sideicon"
             :icon="['fas', 'pen']"
@@ -33,7 +33,7 @@
         ></b-col
       >
       <b-col md-3>
-        <b-button @click="$router.push('reviseproduce')"
+        <b-button @click="$router.push('reviseproduce').catch(()=>{})"
           ><font-awesome-icon
             class="sideicon"
             :icon="['fas', 'pen']"
@@ -42,7 +42,7 @@
         ></b-col
       >
       <b-col md-3
-        ><b-button @click="$router.push('trackpage')"
+        ><b-button @click="$router.push('trackpage').catch(()=>{})"
           ><font-awesome-icon
             class="sideicon"
             :icon="['fas', 'signal']"
@@ -79,7 +79,7 @@ export default {
   mounted() {
     const that = this;
     this.$axios
-      .get("https://c95d5df9aa5a.ngrok.io/api/signin")
+      .get("https://8dddbfe2067c.ngrok.io/api/signin")
       .then(function (response) {
         console.log(response);
         that.account_id = response.data.account;
