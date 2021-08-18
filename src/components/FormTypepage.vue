@@ -28,7 +28,7 @@
           <b-button variant="primary" id="save-download" @click='goTo()'>繼續</b-button>
       </b-col>
       <b-col>
-        <b-button variant="outline-primary" id="console">取消</b-button>
+        <b-button variant="outline-primary" id="console" @click="$router.push('Mainpage')">取消</b-button>
       </b-col>
     </b-row>
 

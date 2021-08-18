@@ -19,15 +19,14 @@ import {faTrash} from '@fortawesome/free-solid-svg-icons'
 import {faSignOutAlt} from '@fortawesome/free-solid-svg-icons'
 import {faFile} from '@fortawesome/free-solid-svg-icons'
 import {faSignal} from '@fortawesome/free-solid-svg-icons'
+import {faCheckCircle} from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
 import { library } from '@fortawesome/fontawesome-svg-core'
-// import axios from 'axios'
-// import VueAxios from 'vue-axios'
 import qs from 'qs'
 
 // Make BootstrapVue available throughout your project
 Vue.use(BootstrapVue)
-library.add(faEye,faDownload,faFileAlt,faPen,faCloudUploadAlt,faTrash,faSignOutAlt,faFile,faSignal)
+library.add(faEye,faDownload,faFileAlt,faPen,faCloudUploadAlt,faTrash,faSignOutAlt,faFile,faSignal,faCheckCircle)
 // Optionally install the BootstrapVue icon components plugin
 Vue.use(IconsPlugin)
 

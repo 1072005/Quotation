@@ -19,27 +19,37 @@
             )"
             :key="item.id"
           >
-            <div class="Specification">{{ item.produce }}</div>
+            <div class="Specification">
+              <div class="innerdiv" :title="item.product_Name">
+                {{ item.product_Name }}
+              </div>
+            </div>
             <div class="producemoney">
-              {{ item.money }}
-
+              <div class="innerdiv" :title="item.price">
+                {{ item.price }}
+              </div>
             </div>
 
             <div class="edit">
-              <font-awesome-icon
-                class="penicon"
-                :icon="['fas', 'pen']"
-                style="color: black"
-                size="4x"
-              />
+              <div class="mainicon">
+                <font-awesome-icon
+                  class="penicon"
+                  :icon="['fas', 'pen']"
+                  style="color: black"
+                  size="4x"
+                  @click="editproduce(item.product_ID)"
+                />
+              </div>
             </div>
             <div class="delete">
-              <font-awesome-icon
-                class="trashicon"
-                :icon="['fas', 'trash']"
-                style="color: black"
-                size="4x"
-              />
+              <div class="mainicon">
+                <font-awesome-icon
+                  class="trashicon"
+                  :icon="['fas', 'trash']"
+                  style="color: black"
+                  size="4x"
+                />
+              </div>
             </div>
           </b-col>
           <b-pagination
@@ -69,24 +79,36 @@ export default {
     return {
       perPage: 6,
       currentPage: 1,
-      items: [
-        {
-          produce: '產品規格',
-          money: "產品單價",
-          
-        },
-        { produce: '產品規格', money: "產品單價",  },
-        { produce: '產品規格', money: "產品單價",  },
-        { produce: '產品規格', money: "產品單價",  },
-
-
-      ],
+      items: [],
     };
   },
   computed: {
     rows() {
       return this.items.length;
     },
+  },
+  methods: {
+    editproduce(ProduceID) {
+      const that = this;
+      const produce = {
+        Product_ID: ProduceID,
+      };
+      localStorage.setItem("producedata", JSON.stringify(produce));
+      that.$router.push({ path: "editproduct" });
+    },
+  },
+  mounted() {
+     window.localStorage.removeItem('producedata')
+    //  const that=this
+    this.$axios
+      .get("https://8dddbfe2067c.ngrok.io/api/products")
+      .then((response) => {
+        this.items = response.data.data;
+      })
+      .catch(function (error) {
+        // 请求失败处理
+        console.log(error);
+      });
   },
 };
 </script>
@@ -97,7 +119,7 @@ export default {
   background-color: white !important;
 }
 .rightside h1 {
-  margin-top: 3%;
+  margin-top: 25px;
   margin-left: 20px;
   font-weight: bold;
 }
@@ -107,7 +129,7 @@ export default {
 }
 .Specification {
   display: inline-block;
-  width: 54%;
+  width: 763px;
   height: 100px;
   text-align: center;
   line-height: 100px;
@@ -116,7 +138,7 @@ export default {
 }
 .producemoney {
   display: inline-block;
-  width: 30%;
+  width: 410px;
   height: 100px;
   text-align: center;
   line-height: 100px;
