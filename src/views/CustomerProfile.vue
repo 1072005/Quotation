@@ -13,40 +13,43 @@
             class="inbox"
             id="my-table"
             small
-            v-for="(item,index) in items.slice(
+            v-for="(item, index) in items.slice(
               (this.currentPage - 1) * this.perPage,
               this.currentPage * this.perPage
             )"
             :key="item.id"
           >
             <div class="customername">
-              <div class="innerdiv" :title="item.customer_Name">{{ item.customer_Name }}</div>
+              <div class="innerdiv" :title="item.customer_Name">
+                {{ item.customer_Name }}
+              </div>
             </div>
             <div class="customerproduce">
               <div class="innerdiv" :title="item.company_Name">
-              {{ item.company_Name }}
+                {{ item.company_Name }}
               </div>
             </div>
 
             <div class="edit">
-              <div class="mainicon" >
-              <font-awesome-icon
-                class="penicon"
-                :icon="['fas', 'pen']"
-                style="color: black"
-                size="4x"
-              />
+              <div class="mainicon">
+                <font-awesome-icon
+                  class="penicon"
+                  :icon="['fas', 'pen']"
+                  style="color: black"
+                  size="4x"
+                  @click="editclient(item.customer_ID)"
+                />
               </div>
             </div>
             <div class="delete">
               <div class="mainicon">
-              <font-awesome-icon
-                class="trashicon"
-                :icon="['fas', 'trash']"
-                style="color: black"
-                size="4x"
-                @click="deletedata(index)"
-              />
+                <font-awesome-icon
+                  class="trashicon"
+                  :icon="['fas', 'trash']"
+                  style="color: black"
+                  size="4x"
+                  @click="deletedata(index)"
+                />
               </div>
             </div>
           </b-col>
@@ -77,22 +80,13 @@ export default {
     return {
       perPage: 6,
       currentPage: 1,
-      items: [
-        {customer_Name:'asdasdadadasd',company_Name:'dsaadsada'},
-        {customer_Name:'asdasdadadasd',company_Name:'dsaadsada'},
-        {customer_Name:'asdasdadadasd',company_Name:'dsaadsada'},
-        {customer_Name:'asdasdadadasd',company_Name:'dsaadsada'},
-        {customer_Name:'asdasdadadasd',company_Name:'dsaadsada'},
-        {customer_Name:'asdasdadadasd',company_Name:'dsaadsada'},
-        
-        
-      ],
+      items: [],
     };
   },
   mounted() {
     //  const that=this
     this.$axios
-      .get("https://d42ab6f4f646.ngrok.io/api/customer1")
+      .get("https://8dddbfe2067c.ngrok.io/api/customer")
       .then((response) => {
         this.items = response.data.data;
 
@@ -109,23 +103,32 @@ export default {
       return this.items.length;
     },
   },
-  methods:{
-        deletedata(index){
-          console.log(this.items[index].customer_ID)
-       this.$axios
+  methods: {
+    editclient(CustomerID) {
+      const that = this;
+      const customer = {
+        CustomerID: CustomerID,
+      };
+      
+      localStorage.setItem("customerdata", JSON.stringify(customer));
+      that.$router.push({ path: "editclient" });
+    },
+    deletedata(index) {
+      console.log(this.items[index].customer_ID);
+      this.$axios
         .delete(
-          "https://d42ab6f4f646.ngrok.io/api/customer/" +
+          "https://8dddbfe2067c.ngrok.io/api/customer/" +
             this.items[index].customer_ID
         )
         .then(function (response) {
           window.location.reload();
-          console.log(response)
+          console.log(response);
         })
         .catch(function (error) {
           console.log(error);
         });
-    }
-  }
+    },
+  },
 };
 </script>
 

@@ -31,13 +31,19 @@
             :key="item.id"
           >
             <div class="dateleft">
-              <div class="innerdiv" :title="item.quotation_ID">{{ item.quotation_ID }}</div>
+              <div class="innerdiv" :title="item.quotation_ID">
+                {{ item.quotation_ID }}
+              </div>
             </div>
             <div class="name">
-              <div class="innerdiv" :title="item.company_Name">{{ item.company_Name }}</div>
+              <div class="innerdiv" :title="item.company_Name">
+                {{ item.company_Name }}
+              </div>
             </div>
             <div class="produce">
-              <div class="innerdiv"  :title="item.project_Name">{{ item.project_Name }}</div>
+              <div class="innerdiv" :title="item.project_Name">
+                {{ item.project_Name }}
+              </div>
             </div>
             <div class="downlord" @click="downloadpdf(index)">
               <div class="mainicon">
@@ -49,20 +55,30 @@
                 />
               </div>
             </div>
-            <div class="back" @click="$router.push('upload')">
+            <div class="back">
               <div class="mainicon">
                 <font-awesome-icon
                   class="uploadicon"
                   :icon="['fas', 'cloud-upload-alt']"
                   style="color: black"
                   size="4x"
-                  v-if="item.isSignback!=true"
+                  v-if="item.isSignback != true"
+                  @click="$router.push('upload')"
+                  v-bind="
+                    storedata(
+                      item.quotation_ID,
+                      item.company_Name,
+                      item.project_Name
+                    )
+                  "
                 />
+
                 <font-awesome-icon
                   class="uploadicon"
                   :icon="['fas', 'check-circle']"
                   style="color: blue"
                   size="4x"
+                  @click="deleteupload(item.isSignback)"
                   v-else
                 />
               </div>
@@ -124,7 +140,7 @@ export default {
   },
   data() {
     return {
-      isSignback: '',
+      isSignback: "",
       selected: 1,
       options: [
         { value: "1", text: "顯示全部" },
@@ -136,19 +152,17 @@ export default {
       currentPage: 1,
 
       items: [],
-      product: [],
       file: null,
     };
   },
   methods: {
     get_data: function () {
       this.$axios
-        .get("https://d42ab6f4f646.ngrok.io/api/quotations")
+        .get("https://8dddbfe2067c.ngrok.io/api/quotations")
         .then((response) => {
           this.items = response.data.data;
 
-          console.log("apistart");
-          console.log(this.items);
+         
         })
         .catch(function (error) {
           // 请求失败处理
@@ -164,7 +178,7 @@ export default {
       } else {
         this.$axios
           .get(
-            "https://d42ab6f4f646.ngrok.io/api/quotation?user_id=1&token=SMoQMA3y9mXkJ2qr8Loc&Signback=1&Search=" +
+            "https://8dddbfe2067c.ngrok.io/api/quotation?user_id=1&token=SMoQMA3y9mXkJ2qr8Loc&Signback=1&Search=" +
               Search
           )
           .then(function (response) {
@@ -180,7 +194,7 @@ export default {
       //  const that=this
       this.$axios
         .get(
-          "https://d42ab6f4f646.ngrok.io/api/file/" +
+          "https://8dddbfe2067c.ngrok.io/api/file/" +
             this.items[index].quotation_ID
         )
         .then(function (response) {
@@ -190,6 +204,17 @@ export default {
           console.log(error);
         });
     },
+    deleteupload(signback) {
+      let result = window.confirm("確定要刪除回簽檔嗎");
+      if (result == true) {
+        //axios
+        signback = false;
+        console.log(signback);
+        window.location.reload();
+      } else {
+        console.log("no");
+      }
+    },
     postisback(selected) {
       const that = this;
       console.log(selected);
@@ -198,7 +223,7 @@ export default {
       } else {
         this.$axios
           .get(
-            "https://d42ab6f4f646.ngrok.io/api/quotations?user_id=1&token=SMoQMA3y9mXkJ2qr8Loc&Signback=" +
+            "https://8dddbfe2067c.ngrok.io/api/quotations?user_id=1&token=SMoQMA3y9mXkJ2qr8Loc&Signback=" +
               selected
           )
           .then(function (response) {
@@ -209,23 +234,32 @@ export default {
           });
       }
     },
-    deletedata(index){
-       this.$axios
+    deletedata(index) {
+      this.$axios
         .delete(
-          "https://d42ab6f4f646.ngrok.io/api/quotation/" +
+          "https://8dddbfe2067c.ngrok.io/api/quotation/" +
             this.items[index].quotation_ID
         )
-        .then(function (response) {
+        .then(function () {
           window.location.reload();
-          console.log(response)
+         
         })
         .catch(function (error) {
           console.log(error);
         });
-    }
+    },
+    storedata(quotation_id, company_name, project_name) {
+      const info = {
+        id: quotation_id,
+        company: company_name,
+        project: project_name,
+      };
+      localStorage.setItem('localdata',JSON.stringify(info));
+    },
   },
   mounted() {
     this.get_data();
+    
   },
   computed: {
     rows() {

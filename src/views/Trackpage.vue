@@ -19,21 +19,24 @@
             )"
             :key="item.id"
           >
-            <div class="dateleft">
-              <div class="innerdiv" >{{ item.quotation_ID }}</div>
-            </div>
-
-            <div class="produce">
-              <div class="innerdiv" :title="item.produce_Name">
-                {{ item.produce_Name }}
+            <div class="track">
+              <div class="innerdiv" :title="item.isSignback">
+                {{ item.company_Name }}
               </div>
             </div>
-            <div class="ispay">
-              <div class="innerdiv" :title="item.ispay">{{ item.ispay }}</div>
+            <div class="trackdata">
+              <div class="innerdiv">{{ item.quotation_ID }}</div>
             </div>
+
+            <div class="projectname">
+              <div class="innerdiv" :title="item.project_Name">
+                {{ item.project_Name }}
+              </div>
+            </div>
+
             <div class="remark">
-              <div class="innerdiv"  :title="item.remark">
-                {{ item.remark }}
+              <div class="innerdiv" :title="item.remark">
+                {{ item.isSignback }}
               </div>
             </div>
             <div class="back">
@@ -41,6 +44,16 @@
                 <font-awesome-icon
                   class="uploadicon"
                   :icon="['fas', 'cloud-upload-alt']"
+                  style="color: black"
+                  size="4x"
+                />
+              </div>
+            </div>
+            <div class="back">
+              <div class="mainicon">
+                <font-awesome-icon
+                  class="uploadicon"
+                  :icon="['fas', 'pen']"
                   style="color: black"
                   size="4x"
                 />
@@ -87,24 +100,7 @@ export default {
       currentPage: 1,
 
       items: [
-        {
-          quotation_ID: 20201001,
-          produce_Name: "專案名稱",
-          ispay: "付款狀態",
-          remark: "備註",
-        },
-        {
-          quotation_ID: 20201002,
-          produce_Name: "專案名稱",
-          ispay: "付款狀態",
-          remark: "備註",
-        },
-        {
-          quotation_ID: 20201003,
-          produce_Name: "專案名稱",
-          ispay: "付款狀態",
-          remark: "備註",
-        },
+        //  { quotation_ID:'123',project_Name:'465465',remark:'45646'}
       ],
       product: [],
       file: null,
@@ -114,8 +110,9 @@ export default {
   mounted() {
     //  const that=this
     this.$axios
-      .get("https://c95d5df9aa5a.ngrok.io/api/quotations")
+      .get("https://8dddbfe2067c.ngrok.io/api/quotations")
       .then((response) => {
+        console.log(response);
         this.items = response.data.data;
 
         console.log("apistart");
@@ -144,9 +141,28 @@ export default {
   border: solid 1px black;
   border-left: none;
 }
-.ispay {
+
+.track{
   display: inline-block;
-  width: 213px;
+  width: 10%;
+  height: 100px;
+  text-align: center;
+  line-height: 100px;
+  border: solid 1px black;
+  border-radius: 10% 0% 0% 10%;
+}
+.trackdata{
+    display: inline-block;
+  width: 10%;
+  height: 100px;
+  text-align: center;
+  line-height: 100px;
+  border: solid 1px black;
+  border-left: none;
+}
+.projectname {
+  display: inline-block;
+  width: 350px;
   height: 100px;
   text-align: center;
   line-height: 100px;

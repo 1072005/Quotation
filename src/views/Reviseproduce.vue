@@ -20,7 +20,7 @@
             :key="item.id"
           >
             <div class="Specification">
-              <div class="innerdiv"  :title="item.product_Name">
+              <div class="innerdiv" :title="item.product_Name">
                 {{ item.product_Name }}
               </div>
             </div>
@@ -32,22 +32,23 @@
 
             <div class="edit">
               <div class="mainicon">
-              <font-awesome-icon
-                class="penicon"
-                :icon="['fas', 'pen']"
-                style="color: black"
-                size="4x"
-              />
+                <font-awesome-icon
+                  class="penicon"
+                  :icon="['fas', 'pen']"
+                  style="color: black"
+                  size="4x"
+                  @click="editproduce(item.product_ID)"
+                />
               </div>
             </div>
             <div class="delete">
               <div class="mainicon">
-              <font-awesome-icon
-                class="trashicon"
-                :icon="['fas', 'trash']"
-                style="color: black"
-                size="4x"
-              />
+                <font-awesome-icon
+                  class="trashicon"
+                  :icon="['fas', 'trash']"
+                  style="color: black"
+                  size="4x"
+                />
               </div>
             </div>
           </b-col>
@@ -78,9 +79,7 @@ export default {
     return {
       perPage: 6,
       currentPage: 1,
-      items: [
-      
-      ],
+      items: [],
     };
   },
   computed: {
@@ -88,15 +87,23 @@ export default {
       return this.items.length;
     },
   },
-    mounted() {
+  methods: {
+    editproduce(ProduceID) {
+      const that = this;
+      const produce = {
+        Product_ID: ProduceID,
+      };
+      localStorage.setItem("producedata", JSON.stringify(produce));
+      that.$router.push({ path: "editproduct" });
+    },
+  },
+  mounted() {
+     window.localStorage.removeItem('producedata')
     //  const that=this
     this.$axios
-      .get("https://d42ab6f4f646.ngrok.io/api/products")
+      .get("https://8dddbfe2067c.ngrok.io/api/products")
       .then((response) => {
         this.items = response.data.data;
-
-        console.log("apistart");
-        console.log(this.items);
       })
       .catch(function (error) {
         // 请求失败处理
@@ -131,7 +138,7 @@ export default {
 }
 .producemoney {
   display: inline-block;
-  width: 425px;
+  width: 410px;
   height: 100px;
   text-align: center;
   line-height: 100px;

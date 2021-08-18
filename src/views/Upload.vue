@@ -3,9 +3,9 @@
     <Sidebar></Sidebar>
     <b-row>
       <b-col md="10" offset-md="2" class="rightside">
-        <b-col md-3 class="data"> 123</b-col>
-        <b-col offset-md="4" class="company"> 123</b-col>
-        <b-col offset-md="3" md-3 class="project"> 123</b-col>
+        <b-col md-3 class="data"> {{items.id}}</b-col>
+        <b-col offset-md="2" md-4 class="company"> {{items.company}}</b-col>
+        <b-col offset-md="3" md-3 class="project"> {{items.project}}</b-col>
         <b-col class="selet">
           <b-form-file
             v-model="file"
@@ -22,7 +22,7 @@
             variant="outline-info"
             class="backbtn"
             size="lg"
-            @click="$router.push('Mainpage')"
+            @click="clearlocaldata()"
             >回首頁</b-button
           >
         </b-col>
@@ -42,8 +42,9 @@ export default {
   },
   data() {
     return {
+      
       file: null,
-      items: [{ quotation_ID: "456", company_Name: "", project_Name: "" }],
+      items: [],
       formData: new FormData(),
     };
   },
@@ -52,13 +53,15 @@ export default {
       this.formData.append("file", e.target.files[0]); //放進上傳的檔案
     },
     postdata() {
+      const that=this;
       this.$axios
-        .post("https://c95d5df9aa5a.ngrok.io/api/signin")
+        .post("https://8dddbfe2067c.ngrok.io/api/file/"+this.items.id,this.formData)
         .then(function (response) {
           console.log(response);
           if (response.data.status_Code == 2000) {
-            alert(this.file + "上傳成功");
-            this.$router.push({ path: "Mainpage" });
+            alert(that.file.name + "上傳成功");
+            that.$router.push({ path: "Mainpage" });
+            localStorage.clear();
           } else {
             alert(response.message);
             this.$router.push({ path: "upload" });
@@ -68,7 +71,17 @@ export default {
           console.log(error);
         });
     },
+    clearlocaldata(){
+      localStorage.removeItem('localdata');
+      this.$router.push('Mainpage')
+    }
+    
   },
+  mounted(){
+    var data1 = JSON.parse(localStorage.getItem('localdata'));
+    this.items=data1
+   
+  }
 };
 </script>
 

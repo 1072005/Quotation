@@ -12,6 +12,7 @@ import  customerprofile from '../views/CustomerProfile'
 import  trackpage from '../views/Trackpage.vue'
 import  reviseproduce from '../views/Reviseproduce.vue'
 import  upload from '../views/Upload.vue'
+import  edittrackpage from '../views/EditTrackpage.vue'
 
 Vue.use(VueRouter)
 
@@ -81,6 +82,11 @@ const routes = [
     path: '/upload',
     name: 'upload',
     component:upload
+  },
+  {
+    path: '/edittrackpage',
+    name: 'edittrackpage',
+    component:edittrackpage
   },
 ]
 
