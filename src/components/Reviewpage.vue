@@ -41,7 +41,7 @@
           <p align="right"><l>報價有效期至&emsp;&emsp;</l></p>
         </b-col>
      </b-row>
-     <hr size=7>
+     <div class="bg-dark"><hr size=7></div>
       <p><b>特別注意事項：</b>1.本報價單經雙方協議成交，經客戶簽章視為正式訂單。</p>
       <div class="flieds">
         <b-row>
@@ -157,7 +157,7 @@
        </b-col>
      </b-row>
    </b-container>
-          <img v-bind="mainProps" src="../assets/Form_example_myway.png" alt="example" >
+          <!-- <img v-bind="mainProps" src="../assets/Form_example_myway.png" alt="example" > -->
  </div>
 </template>
 
