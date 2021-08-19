@@ -29,16 +29,22 @@
      <div class="bg-dark"><hr size=7></div>
      <b-row>
         <b-col md="4">
-          <p>客戶姓名：&emsp;&emsp;</p>
-          <p>公司名稱：&emsp;&emsp;</p>
-          <p>公司電話：&emsp;&emsp;</p>
-          <p>公司傳真：&emsp;&emsp;</p>
+          <p>客戶姓名：&emsp;&emsp;{{Customer.Customer_Name}}</p>
+          <p>公司名稱：&emsp;&emsp;{{Customer.Company_Name}}</p>
+          <p>公司電話：&emsp;&emsp;{{Customer.Company_Phone}}</p>
+          <p>公司傳真：&emsp;&emsp;{{Customer.Company_Fax}}</p>
         </b-col>
         <b-col md="6">
           <p align="right"><b>日期&emsp;&emsp;</b></p>
           <p align="right"><b>報價單編號&emsp;&emsp;</b></p>
           <p align="right"><b>客戶統一編號&emsp;&emsp;</b></p>
           <p align="right"><l>報價有效期至&emsp;&emsp;</l></p>
+        </b-col>
+        <b-col md="2">
+          <p>{{today_Date}}</p>
+          <p>報價單編號</p>
+          <p>{{Customer.Customer_ID}}</p>
+          <p>{{last_Date}}</p>
         </b-col>
      </b-row>
      <div class="bg-dark"><hr size=7></div>
@@ -65,39 +71,45 @@
           </b-col>
         </b-row>
       </div>
-      <div class="products" >
-        <b-row>
-          <b-col style="border-style:solid">
-            <p align="center">1</p>
-          </b-col>
-          <b-col style="border-style:solid" md="4">
-            <p>Fever Guard(軟體+設備)<br>(1)軟體:人臉追蹤測溫軟體<br>(2)型號:FGA12-IR2</p>
-          </b-col>
-          <b-col style="border-style:solid">
-            <p align="center">2</p>
-          </b-col>
-          <b-col style="border-style:solid">
-            <p align="right">NT$6,3000</p>
-          </b-col>
-          <b-col style="border-style:solid" md="2">
-            <p align="right">53000</p>
-          </b-col>
-          <b-col style="border-style:solid" md="2">
-            <p align="right">106000</p>
-          </b-col>
-        </b-row>
+      <div class="products">
+        <!--eslint-disable-next-line-->
+        <div class="product" v-for="(item, index) in Products">
+          <b-row>
+            <b-col style="border-style:solid">
+              <p align="center">{{index+1}}</p>
+            </b-col>
+            <b-col style="border-style:solid" md="4">
+              <p>{{item.Product_Name}}<br>{{item.Product_Detail}}</p>
+            </b-col>
+            <b-col style="border-style:solid">
+              <p align="center">{{item.Amount}}</p>
+            </b-col>
+            <b-col style="border-style:solid">
+              <span style="float:left">NT$</span>
+              <span style="float:right">{{item.Price}}</span>
+            </b-col>
+            <b-col style="border-style:solid" md="2">
+              <span style="float:left">NT$</span>
+              <span style="float:right">{{item.Discount}}</span>
+            </b-col>
+            <b-col style="border-style:solid" md="2">
+              <span style="float:left">NT$</span>
+              <span style="float:right">{{item.Subtotal}}</span>
+            </b-col>
+          </b-row>
+        </div>
       </div>
       <div>
         <b-row>
           <b-col md="6">
-            <p><b>備註：<br>                                                                                                     
-                1.硬體及系統保固一年。(天災 , 人為破壞因素損壞不在保固範圍內)<br>
-                2.如有其他增加項目則另外報價。<br>
-                3.出貨地(FOB) : 台灣。<br>
-                4.款項未付清前 , 產品所有權屬於麥威科技所有。<br>
-                5.下單後訂單不可取消。<br>
-                6.交期與付款條件:下單後一週,TT。<br>
-                7. 15天內完成維修。</b></p>
+            <p><b>備註：<br>                                                                                                    
+                1. {{Remark1}}<br>
+                2. {{Remark2}}<br>
+                3. {{Remark3}}<br>
+                4. {{Remark4}}<br>
+                5. {{Remark5}}<br>
+                6. {{Remark6}}<br>
+                7. {{Remark7}}</b></p>
             </b-col>
           <b-col>
             <b-row>
@@ -106,7 +118,8 @@
                 <p align="right" >小計</p>
               </b-col>
               <b-col  md="4" style="border-style:solid;">
-                <p align="right">小計1</p>
+                <span style="float:left">NT$</span>
+                <span style="float:right">{{Stotal}}</span>
               </b-col>
             </b-row>
             <b-row>
@@ -115,7 +128,8 @@
                 <p align="right">稅額</p>
               </b-col>
               <b-col  md="4" style="border-style:solid;">
-                <p align="right">稅額1</p>
+                <span style="float:left">NT$</span>
+                <span style="float:right">{{Rtotal}}</span>
               </b-col>
             </b-row>
             <b-row>
@@ -124,20 +138,17 @@
                 <p align="right"><b>總計</b></p>
               </b-col>
               <b-col  md="4" style="border-style:solid;">
-                <p align="right">總計1</p>
+                <span style="float:left">NT$</span>
+                <span style="float:right">{{Quotation.total}}</span>
               </b-col>
             </b-row>
           </b-col>
          
         </b-row>
       </div>
-        <b-row>
-          <!-- <b-table hover :items="items" :fields="fields" bordered align="center"></b-table> -->
-        </b-row>
+      
      <br>
-     <b-row>
-        
-     </b-row>
+     
      <b-row>
        <b-col md="4">
         <p align="center" style="border-style:solid"><b>客戶同意採購簽章：</b></p>
@@ -163,120 +174,98 @@
 
 <script>
 export default{
-  name: "Reviewspage",
+  name: "Review",
   el: "#main",
-
   data(){
     return{
-      Client_names : [],
-      Client_companys : [],
-      fields: [ 
-                { key: 'ID', label: '品名編號' },
-                { key: 'format', label: '產品規格' },
-                { key: 'amount', label: '數量' },
-                { key: 'unit-price', label: '單價' },
-                { key: 'discount-price', label: '特價(未稅)' },
-                { key: 'subtotal', label: '小計' }
-              ],
-      items: [
-         { ID: 1, 
-            format: 'Fever Guard(軟體+設備)(1)軟體:人臉追蹤測溫軟體(2)型號:FGA12-IR2',
-            amount: 2,
-            unit_price: 63000,
-            discount_price: 53000,
-            subtotal: 10600
-           },
-        ]
+      user_id: '',
+      Customer: {
+        Customer_Name: '',
+        Company_Name: '',
+        Company_Phone: '',
+        Company_Fax: '',
+        Customer_ID: ''
+      },
+
+      Product: {
+        Product_ID: 0,
+        Product_Name: "",
+        Product_Detail: "",
+        Amount: '',
+        Price: '',
+        Discount: '',
+        Subtotal: ''
+      },
+
+      Products: [],
+
+      Quotation: {
+        total: ''
+      },
+      Remark1: '',
+      Remark2: '',
+      Remark3: '',
+      Remark4: '',
+      Remark5: '',
+      Remark6: '',
+      Remark7: '',
+
+      Stotal: '',
+      Rtotal: '',
+      i:'',
+
+      today_Date:'',
+      last_Date:''
     }
   },
 
   mounted(){
     
+    this.user_id = window.sessionStorage.getItem("user_id");
+    // console.log(this.user_id);
+    this.Customer.Customer_Name = window.sessionStorage.getItem("Customer_Name");
+    this.Customer.Company_Name = window.sessionStorage.getItem("Company_Name");
+    this.Customer.Company_Phone = window.sessionStorage.getItem("Company_Phone");
+    this.Customer.Company_Fax = window.sessionStorage.getItem("Company_Fax");
+    this.Customer.Customer_ID = window.sessionStorage.getItem("Customer_ID");
+    // console.log(this.Customer);
+    this.Remark1 = window.sessionStorage.getItem("Remark1");
+    this.Remark2 = window.sessionStorage.getItem("Remark2");
+    this.Remark3 = window.sessionStorage.getItem("Remark3");
+    this.Remark4 = window.sessionStorage.getItem("Remark4");
+    this.Remark5 = window.sessionStorage.getItem("Remark5");
+    this.Remark6 = window.sessionStorage.getItem("Remark6");
+    this.Remark7 = window.sessionStorage.getItem("Remark7");
+
+    this.Quotation.total = window.sessionStorage.getItem("total");
+
+    this.Stotal = window.sessionStorage.getItem("Stotal");
+    this.Rtotal = window.sessionStorage.getItem("Rtotal");
+    this.i = window.sessionStorage.getItem("i");
+
+    for(var j=0; j < parseInt(this.i); j++){
+      this.Product.Product_ID = j+1;
+      this.Product.Product_Name = window.sessionStorage.getItem("Product_Name"+j);
+      this.Product.Product_Detail = window.sessionStorage.getItem("Product_Detail"+j);
+      this.Product.Amount = window.sessionStorage.getItem("Amount"+j);
+      this.Product.Price = window.sessionStorage.getItem("Price"+j);
+      this.Product.Discount = window.sessionStorage.getItem("Discount"+j);
+      this.Product.Subtotal = window.sessionStorage.getItem("Subtotal"+j);
+
+      this.Products[j] = this.Product;
+      this.Product = {};
+    }
+    // console.log(this.Products);
+    var Today = new Date();
+    var Last = new Date();
+    Last=Last.setDate(Last.getDate()+30);
+    Last=new Date(Last);
+    this.today_Date = Today.getFullYear()+'/'+(Today.getMonth()+1)+'/'+Today.getDate();
+    this.last_Date = Last.getFullYear()+'/'+(Last.getMonth()+1)+'/'+Last.getDate();
   },
 
-  methods:{
-
-    getCostomers(){
-
-      let search_Costomers= {
-        user_id: 1,
-        token: "SMoQMA3y9mXkJ2qr8Loc",
-        Search: this.Search_Costomers,
-        Search_In: this.Search_In
-      }
-
-       this.$axios.get('https://c95d5df9aa5a.ngrok.io/api/customers',search_Costomers)
-      .then(function (response) {
-        console.log(response);
-      })
-      .catch(function (error) {
-        console.log(error);
-      }); 
-    },
-
-    getProducts(){
-
-      let search_Products= {
-        user_id: 1,
-        token: "SMoQMA3y9mXkJ2qr8Loc",
-        Search: this.Product_Name
-      }
-
-     this.$axios.get('https://c95d5df9aa5a.ngrok.io/api/products',search_Products)
-      .then(function (response) {
-        console.log(response);
-      })
-      .catch(function (error) {
-        console.log(error);
-      }); 
-    },
-
-    postform(){
-
-      let form={
-        user_id: 1,
-        token: "SMoQMA3y9mXkJ2qr8Loc",
-        Customer: {
-          Customer_Name: this.Customer_Name,
-          Company_Name: this.Company_Name,
-          Company_Phone: this.Company_Phone,
-          Company_Fax: this.Company_Fax,
-          Customer_ID: this.Customer_ID
-        },
-        Products: [
-          {
-            Product_ID: 1,
-            Amount: 2,
-            Price: 53000,
-            Discount: 53000,
-            Subtotal: 106000
-          },
-          {
-            Product_ID: 2,
-            Amount: 1,
-            Price: 53000,
-            Discount: 53000,
-            Subtotal: 53000
-          }
-        ],
-        Quotation: {
-          Project_Name: this.Project_Name,
-          Project_Owner: "account",
-          Remark: this.Remark1 + "/n" + this.Remark2 + "/n" + this.Remark3 + "/n" + 
-                  this.Remark4 + "/n" + this.Remark5 + "/n" + this.Remark6 + "/n" + this.Remark7 + "/n",
-          total: this.total
-        }
-      };
-
-      this.$axios.post('https://c95d5df9aa5a.ngrok.io/api/quotation',form)
-      .then(function (response) {
-        console.log(response);
-      })
-      .catch(function (error) {
-        console.log(error);
-      }); 
-    },
-  }
+  // methods: {
+  // }
 }
 
 
