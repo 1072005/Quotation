@@ -63,12 +63,13 @@
                   style="color: black"
                   size="4x"
                   v-if="item.isSignback != true"
-                  @click="               storedata(
+                  @click="
+                    storedata(
                       items[index].quotation_ID,
                       items[index].company_Name,
                       items[index].project_Name
-                    )"
-
+                    )
+                  "
                 />
 
                 <font-awesome-icon
@@ -88,6 +89,7 @@
                   :icon="['far', 'eye']"
                   style="color: black"
                   size="4x"
+                  @click="viewdata(items[index].quotation_ID)"
                 />
               </div>
             </div>
@@ -98,7 +100,7 @@
                   :icon="['fas', 'pen']"
                   style="color: black"
                   size="4x"
-                   @click="goeditform(index)"
+                  @click="goeditform(index)"
                 />
               </div>
             </div>
@@ -185,7 +187,7 @@ export default {
       }
     },
     downloadpdf(index) {
-       const that=this
+      const that = this;
       this.$api
         .PDF(this.items[index].quotation_ID)
         .then(function (response) {
@@ -196,10 +198,10 @@ export default {
           console.log(error);
         });
     },
-    goeditform(index){
-      const id =this.items[index].quotation_ID;
+    goeditform(index) {
+      const id = this.items[index].quotation_ID;
       localStorage.setItem("editformID", id);
-      this.$router.push('Form')
+      this.$router.push("Form");
     },
     deleteupload(index) {
       let result = window.confirm("確定要刪除回簽檔嗎");
@@ -252,9 +254,18 @@ export default {
         company: company_name,
         project: project_name,
       };
-      console.log(info)
+      console.log(info);
       localStorage.setItem("localdata", JSON.stringify(info));
       this.$router.push({ path: "upload" });
+    },
+    viewdata(ID) {
+      var route = this.$router.resolve({path:'/Review'});
+      const viewinfo = {
+        id: ID,
+      };
+      console.log(viewinfo);
+      localStorage.setItem("viewlocaldata", JSON.stringify(viewinfo));
+      window.open(route.href,'_blank');
     },
   },
   mounted() {

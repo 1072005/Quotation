@@ -75,7 +75,11 @@ export const Deleteapi = deleteID => instance.delete('quotation/' + deleteID);
 
 // [主頁面]
 /** 查看review,編輯報價單 */
-export const GetFormID = FormID => instance.get('quotations/' + FormID);
+export const GetFormID = FormID => instance.get('quotation/' + FormID);
+
+// [主頁面]
+/** 預覽檔案 */
+export const GetViewData = ItemsId => instance.get('quotation/' + ItemsId);
 
 // [客戶資料頁面] [填寫表單頁面]
 /** 列出客戶 */
