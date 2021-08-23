@@ -78,7 +78,7 @@
                   :icon="['fas', 'check-circle']"
                   style="color: blue"
                   size="4x"
-                  @click="deleteupload(item.isSignback)"
+                  @click="deleteupload(index)"
                   v-else
                 />
               </div>
@@ -132,7 +132,7 @@
 <script>
 // @ is an alias to /src
 import Sidebar from "@/components/Sidebar.vue";
-
+import download from "downloadjs";
 export default {
   name: "Login",
   components: {
@@ -157,12 +157,10 @@ export default {
   },
   methods: {
     get_data: function () {
-      this.$axios
-        .get("https://8dddbfe2067c.ngrok.io/api/quotations")
+      this.$api
+        .Allpage()
         .then((response) => {
           this.items = response.data.data;
-
-         
         })
         .catch(function (error) {
           // 请求失败处理
@@ -176,11 +174,8 @@ export default {
       if (Search == "") {
         this.get_data();
       } else {
-        this.$axios
-          .get(
-            "https://8dddbfe2067c.ngrok.io/api/quotation?user_id=1&token=SMoQMA3y9mXkJ2qr8Loc&Signback=1&Search=" +
-              Search
-          )
+        this.$api
+          .Mainsearch(Search, this.selected)
           .then(function (response) {
             console.log(response);
             that.items = response.data.data;
@@ -191,41 +186,39 @@ export default {
       }
     },
     downloadpdf(index) {
-      //  const that=this
-      this.$axios
-        .get(
-          "https://8dddbfe2067c.ngrok.io/api/file/" +
-            this.items[index].quotation_ID
-        )
+       const that=this
+      this.$api
+        .PDF(this.items[index].quotation_ID)
         .then(function (response) {
-          window.location.href = response.config.url;
+          const content = response.headers["content-type"];
+          download(response.data, that.items[index].quotation_ID, content);
         })
         .catch(function (error) {
           console.log(error);
         });
     },
-    deleteupload(signback) {
+    deleteupload(index) {
       let result = window.confirm("確定要刪除回簽檔嗎");
       if (result == true) {
-        //axios
-        signback = false;
-        console.log(signback);
-        window.location.reload();
-      } else {
-        console.log("no");
+        this.$api
+          .DeletePDF(this.items[index].quotation_ID)
+          .then(function (response) {
+            if (response.data.status_Code == 2000) {
+              window.location.reload();
+            }
+          })
+          .catch(function (error) {
+            console.log(error);
+          });
       }
     },
     postisback(selected) {
       const that = this;
-      console.log(selected);
       if (selected == 1) {
         this.get_data();
       } else {
-        this.$axios
-          .get(
-            "https://8dddbfe2067c.ngrok.io/api/quotations?user_id=1&token=SMoQMA3y9mXkJ2qr8Loc&Signback=" +
-              selected
-          )
+        this.$api
+          .Selectapi(selected)
           .then(function (response) {
             that.items = response.data.data;
           })
@@ -235,18 +228,19 @@ export default {
       }
     },
     deletedata(index) {
-      this.$axios
-        .delete(
-          "https://8dddbfe2067c.ngrok.io/api/quotation/" +
-            this.items[index].quotation_ID
-        )
-        .then(function () {
-          window.location.reload();
-         
-        })
-        .catch(function (error) {
-          console.log(error);
-        });
+      let result = window.confirm("確定要刪除檔案嗎?");
+      if (result == true) {
+        this.$api
+          .Deleteapi(this.items[index].quotation_ID)
+          .then(function (response) {
+            if (response.data.status_Code == 2000) {
+              window.location.reload();
+            }
+          })
+          .catch(function (error) {
+            console.log(error);
+          });
+      }
     },
     storedata(quotation_id, company_name, project_name) {
       const info = {
@@ -254,12 +248,11 @@ export default {
         company: company_name,
         project: project_name,
       };
-      localStorage.setItem('localdata',JSON.stringify(info));
+      localStorage.setItem("localdata", JSON.stringify(info));
     },
   },
   mounted() {
     this.get_data();
-    
   },
   computed: {
     rows() {
