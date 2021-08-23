@@ -66,7 +66,8 @@ const routes = [
   {
     path: '/register',
     name: 'register',
-    component: register
+    component: register,
+    meta: { requiresAuth: false, title: '註冊' }
   },
   {
     path: '/customerprofile',
