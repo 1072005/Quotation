@@ -43,22 +43,21 @@ export default {
   data() {
     return {
       mainProps: { blank: true, width: 145, height: 205.07, class: 'm1' },
-      selected: ''
+      selected: '' //選擇的範本
     }
   },
   
   methods:{
-    state() {
-        return Boolean(0)
-      },
     goTo(){
-      let selected_data= {
-      selected: this.selected
-    };
-      if(this.selected != '')
-        this.$router.resolve({path:'/Form',query:{selected_data}});
+      // let selected_data= {
+      //   selected: this.selected
+      // };
+      if(this.selected != ''){
+        // this.$router.resolve({path:'/Form',query:{selected_data}});
+        this.$router.push('/Form');
+      }
       else if(this.selected == '')
-        this.state();
+        alert("請選擇表單範本！");
     }
   },
 }

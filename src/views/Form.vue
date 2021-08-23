@@ -14,7 +14,6 @@
         </b-col>
       </b-row>
       
-            <!-- @blur.native="_state()" -->
       <br>
       <b-row>
         <b-col>
@@ -350,6 +349,7 @@ export default{
     this.getCustomers();
     this.getallProducts();
     this.Remark();
+    this.getForm();
   },
   
   computed:{
@@ -386,39 +386,12 @@ export default{
 
   methods:{
     
-    _state(data){
-      if(data == 1) {
-        //Project_Name
-        if(this.Quotation.Project_Name.length == 0)
-          this.State.Project_name = false;
-        else if(this.Quotation.Project_Name.length != 0)
-          this.State.Project_name = null;
-      }
-      else if(data == 2){
-        //Customer_Name
-        if(this.Customer.Customer_Name.length == 0)
-          this.State.Customer_Name = false;
-        else if(this.Customer.Customer_Name.length != 0)
-          this.State.Customer_Name = null;
-      }
-      
-      //Company_Name
-      if(this.Customer.Company_Name.length == 0)
-        this.State.Company_Name = false;
-      else if(this.Customer.Company_Name.length != 0)
-        this.State.Company_Name = null;
-      //Company_Phone
-      if(this.Customer.Company_Phone.length == 0)
-        this.State.Company_Phone = false;
-      else if(this.Customer.Company_Phone.length != 0)
-        this.State.Company_Phone = null;
-      //Company_Fax
-      if(this.Customer.Company_Fax.length == 0)
-        this.State.Company_Fax = false;
-      else if(this.Customer.Company_Fax.length != 0)
-        this.State.Company_Fax = null;
+    getForm(){
+      let id;
+      id = window.localStorage.setItem("editformID");
+      console.log(id);
+    },
 
-     },
     
 
     btKeyUp(e) {
@@ -436,7 +409,8 @@ export default{
     
     getCustomers(){
       const that =this;
-      this.$axios.get('https://1ace-220-135-155-67.ngrok.io/api/customers')
+      this.$api
+      .Getcustomer()
       .then(function (response) {
         // console.log(response);
         that.Customers = response.data.data;
@@ -449,7 +423,8 @@ export default{
     searchCustomer(){
       const that = this;
       let search = that.Customer.Customer_Name;
-      this.$axios.get("https://1ace-220-135-155-67.ngrok.io/api/customer?search=" + search + "&search_In=1")
+      this.$api
+      .SearchCustomerName(search)
       .then(function (response) {
         that.Customer.Company_Name = response.data.data[0].company_Name;
         that.Customer.Company_Phone = response.data.data[0].company_Phone;
@@ -463,7 +438,8 @@ export default{
     searchCompany(){
       const that = this;
       let search = that.Customer.Company_Name;
-      this.$axios.get("https://1ace-220-135-155-67.ngrok.io/api/customer?search=" + search + "&search_In=2")
+      this.$api
+      .SearchCompany(search)
       .then(function (response) {
         that.Customer.Company_Phone = response.data.data[0].company_Phone;
         that.Customer.Company_Fax = response.data.data[0].company_Fax;
@@ -476,7 +452,8 @@ export default{
 
     getallProducts(){
       const that =this;
-      this.$axios.get('https://1ace-220-135-155-67.ngrok.io/api/products')
+      this.$api
+      .Getproduce()
       .then(function (response) {        
         that.allProducts = response.data.data;
       })
@@ -495,7 +472,8 @@ export default{
       const that = this;
       let search = that.Product.Product_Name;
       let searchPrice;
-      this.$axios.get("https://1ace-220-135-155-67.ngrok.io/api/product?user_id=1&token=SMoQMA3y9mXkJ2qr8Loc&Search=" + search)
+      this.$api
+      .Searchproduce(search)
       .then(function (response) {        
         searchPrice = response.data.data[0].price;
         that.Product.Price = searchPrice;
@@ -669,7 +647,8 @@ export default{
       }
 
       else{
-        this.$axios.post('http://1c7884ba3f78.ngrok.io/api/quotation',form)
+        this.$api
+        .PostForm(form)
         .then(function (response) {
           console.log(response);
         })

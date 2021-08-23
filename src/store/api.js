@@ -42,7 +42,6 @@ download.interceptors.request.use(
 /** 使用者登入 */
 export const UserLogin = data => instance.post('users/signin', data);
 
-
 /** sidebar顯示帳號 */
 export const Getuser = () => instance.get('users/' + store.state.userName);
 
@@ -74,7 +73,11 @@ export const Selectapi = selected => instance.get('quotations/?Signback=' + sele
 /** 刪除檔案 */
 export const Deleteapi = deleteID => instance.delete('quotation/' + deleteID);
 
-// [客戶資料頁面]
+// [主頁面]
+/** 查看review,編輯報價單 */
+export const GetFormID = FormID => instance.get('quotations/' + FormID);
+
+// [客戶資料頁面] [填寫表單頁面]
 /** 列出客戶 */
 export const Getcustomer = () => instance.get('customers');
 
@@ -98,7 +101,7 @@ export const PutCustomerEdit = (EditCustomerID,Customer) => instance.put('custom
 /** 列出產品 */
 export const Getproduce = () => instance.get('products');
 
-// [產品資料頁面]
+// [產品資料頁面] [填寫表單頁面]
 /** 產品搜尋 */
 export const Searchproduce = (ProduceSearch) => instance.get('product?search=' + ProduceSearch);
 
@@ -140,3 +143,15 @@ export const GetTrackEdit = (Item_ID) => instance.get('payment/'+Item_ID);
 // [追蹤頁面編輯]
 /**  修改指定項目內容 */
 export const PutTrackEdit = (Item_ID,Payment) => instance.put('payment/'+Item_ID,Payment);
+
+// [填寫表單頁面]
+/**  搜尋客戶姓名 */
+export const SearchCustomerName = (CustomerSearch) => instance.get('customer?search=' + CustomerSearch + '&search_In=1');
+
+// [填寫表單頁面]
+/**  搜尋客戶公司 */
+export const SearchCompany = (CompanySearch) => instance.get('customer?search=' + CompanySearch + '&search_In=2');
+
+// [填寫表單頁面]
+/**  送出表單 */
+export const PostForm = (Form) => instance.post('/quotation',Form);
