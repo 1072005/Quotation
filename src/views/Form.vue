@@ -9,7 +9,7 @@
           <b-form-input 
             v-model="Quotation.Project_Name" 
             :state="State.Project_name"
-            list="project-name" 
+            list="project-name"
             id="input-project-name"></b-form-input> 
         </b-col>
       </b-row>
@@ -272,9 +272,8 @@
 </template>
 
 <script>
+import download from "downloadjs";
 export default{
-  name: "Form",
-  el: "#main",
   data(){
     return{
 
@@ -308,7 +307,7 @@ export default{
       allProducts: [],
       //input放置的資料
       Product: {
-        Product_ID: -1,
+        Product_ID: 0,
         Product_Name: "",
         Product_Detail: "",
         Amount: 1,
@@ -320,10 +319,11 @@ export default{
       Products: [],
 
       Quotation: {
+        
         Project_Name: '',
         Project_Owner: "account",
         Remark: '', //Remark1~7
-        total: 0
+        total: 0,
       },
       
       Stotal: 0,
@@ -572,7 +572,7 @@ export default{
     
     Remark(){
       this.Quotation.Remark = this.Remark1 + "\n" + this.Remark2 + "\n" + this.Remark3 + "\n" + 
-                  this.Remark4 + "\n" + this.Remark5 + "\n" + this.Remark6 + "\n" + this.Remark7 + "\n";
+                  this.Remark4 + "\n" + this.Remark5 + "\n" + this.Remark6 + "\n" + this.Remark7;
     },
 
 
@@ -600,8 +600,8 @@ export default{
         Remark6: this.Remark6,
         Remark7: this.Remark7,
 
-        Stotal: this.Stotal,
-        Rtotal: this.Rtotal,
+        Stotal: this.Stotal,//小計
+        Rtotal: this.Rtotal,//稅額
         i: this.items.length,
       };
       
@@ -641,30 +641,30 @@ export default{
 
 
     postform(){
-
+      const that = this;
+      that.Remark();
       let form={
-        user_id: 1,
-        token: "SMoQMA3y9mXkJ2qr8Loc",
         Customer: {
-          Customer_Name: this.Customer.Customer_Name,
-          Company_Name: this.Customer.Company_Name,
-          Company_Phone: this.Customer.Company_Phone,
-          Company_Fax: this.Customer.Company_Fax,
-          Customer_ID: this.Customer.Customer_ID
+          Customer_Name: that.Customer.Customer_Name,
+          Company_Name: that.Customer.Company_Name,
+          Company_Phone: that.Customer.Company_Phone,
+          Company_Fax: that.Customer.Company_Fax,
+          Customer_ID: that.Customer.Customer_ID
         },
-        Products: this.items,
+        Products: that.items,
         Quotation: {
-          Project_Name: this.Quotation.Project_Name,
-          Project_Owner: this.user_id,
-          Remark: this.Quotation.Remark,
-          total: this.Quotation.total
+          Project_Name: that.Quotation.Project_Name,
+          Project_Owner: that.user_id,
+          Remark: that.Quotation.Remark,
+          total: that.Stotal,
+          total_withTax: that.Quotation.total
         }
       };      
-
+      // console.log(form);
       if(form.Customer.Customer_Name == "" || form.Customer.Company_Name == "" || form.Customer.Company_Phone == "" ||
-         form.Customer.Company_Fax == "" || form.Customer.Customer_ID == "" || this.items.length == 0||
-         form.Quotation.Project_Name == "" || this.Remark1 == "" || this.Remark2 == "" || this.Remark3 == "" || 
-         this.Remark4 == "" || this.Remark5 == "" || this.Remark6 == "" || this.Remark7 == ""){
+         form.Customer.Company_Fax == "" || form.Customer.Customer_ID == "" || that.items.length == 0||
+         that.Quotation.Project_Name == "" || that.Remark1 == "" || that.Remark2 == "" || that.Remark3 == "" || 
+         that.Remark4 == "" || that.Remark5 == "" || that.Remark6 == "" || that.Remark7 == ""){
           alert("表單尚未填寫完整！");          
       }
 
@@ -672,6 +672,9 @@ export default{
         this.$axios.post('http://1c7884ba3f78.ngrok.io/api/quotation',form)
         .then(function (response) {
           console.log(response);
+          const content = response.headers["content-type"];
+          download(response.data, content);
+          that.$router.push('Mainpage');
         })
         .catch(function (error) {
           console.log(error);
