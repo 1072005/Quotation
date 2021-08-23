@@ -56,7 +56,7 @@ export default {
       selected: this.selected
     };
       if(this.selected != '')
-        this.$router.push({path:'/Form',query:{selected_data}});
+        this.$router.resolve({path:'/Form',query:{selected_data}});
       else if(this.selected == '')
         this.state();
     }

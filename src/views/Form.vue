@@ -2,20 +2,26 @@
  <div id="bg">
    <b-container fluid class="bv-example-row">
     <p class="h2 text-center mb-4">填寫新表單</p>
-    <b-form id="main">
+    <b-form id="main" autocomplete="off">
        <b-row>
         <b-col>
           <label for="input-project-name">專案名稱</label>
-          <b-form-input v-model="Quotation.Project_Name" type="text" list="project-name" id="input-project-name"></b-form-input> 
+          <b-form-input 
+            v-model="Quotation.Project_Name" 
+            :state="State.Project_name"
+            list="project-name" 
+            id="input-project-name"></b-form-input> 
         </b-col>
       </b-row>
-
+      
+            <!-- @blur.native="_state()" -->
       <br>
       <b-row>
         <b-col>
-          <label for="input-client-name">客戶名字</label>
+          <label for="input-client-name">客戶姓名</label>
           <b-form-input 
             v-model="Customer.Customer_Name" 
+             :state="State.Customer_Name"
              list="client-name" 
              id="input_client_name"
              @change="searchCustomer()"></b-form-input> 
@@ -28,6 +34,7 @@
           <label for="input-client-company">客戶公司</label>
           <b-form-input 
             v-model="Customer.Company_Name" 
+            :state="State.Company_Name"
             list="client-company" 
             id="input-client-company"
             @change="searchCompany()"></b-form-input> 
@@ -43,15 +50,32 @@
       <b-row>
         <b-col>
           <label for="input-client-company-phone">客戶公司電話</label>
-          <b-form-input v-model="Customer.Company_Phone" list="client-company-phone" id="input-client-company-phone"></b-form-input>
+          <b-form-input
+            v-model="Customer.Company_Phone"
+            :state="State.Company_Phone"
+            list="client-company-phone" 
+            id="input-client-company-phone"
+            @keyup.native="btKeyUp2"></b-form-input>
         </b-col>
         <b-col>
           <label for="input-client-company-fax">客戶公司傳真</label>
-          <b-form-input v-model="Customer.Company_Fax" list="client-company-fax" id="input-client-company-fax"></b-form-input>
+          <b-form-input 
+            v-model="Customer.Company_Fax" 
+            list="client-company-fax" 
+            id="input-client-company-fax"
+            @keyup.native="btKeyUp2"></b-form-input>
         </b-col>
         <b-col>
           <label for="input-client-Customer-ID">客戶公司統一編號</label>
-          <b-form-input v-model="Customer.Customer_ID" list="client-Customer-ID" id="input-client-Customer-ID"></b-form-input>
+          <b-form-input 
+            v-model="Customer.Customer_ID" 
+            :type="'number'"
+            :state="Customer_ID_State"
+            list="client-Customer-ID" 
+            id="input-client-Customer-ID"
+            aria-describedby="input-live-feedback"
+            @keyup.native="btKeyUp"></b-form-input>
+            <b-form-invalid-feedback id="input-live-feedback">請輸入完整之統一編號，共八位數</b-form-invalid-feedback>
         </b-col>
       </b-row>
 
@@ -72,7 +96,14 @@
         </b-col>
         <b-col>
           <label for="input-product-detail">細項</label>
-          <b-form-input v-model="Product.Product_Detail" list="product-detail" id="input-product-detail"></b-form-input>
+          <b-form-textarea  
+            v-model="Product.Product_Detail"
+            id="textarea-auto-height"
+            ysize="sm"
+            rows="1"
+            max-rows="1"
+          ></b-form-textarea>
+          <!-- <b-form-input v-model="Product.Product_Detail" list="product-detail" id="input-product-detail"></b-form-input> -->
         </b-col>
       </b-row>
       <b-row>
@@ -80,6 +111,8 @@
           <label for="input-product-amount">數量</label>
           <b-form-input 
             v-model="Product.Amount" 
+            :type="'number'"
+            min="1"
             list="product-amount" 
             id="input-product-amount"  
             @change="changeSubtotal()"></b-form-input>
@@ -88,17 +121,30 @@
           <label for="input-product-price">單價</label>
           <b-form-input 
             v-model="Product.Price" 
+            :type="'number'"
+            min="0"
             list="product-price" 
             id="input-product-price" 
             @change="changePrice(),changeSubtotal()"></b-form-input>
         </b-col>
         <b-col>
           <label for="input-product-discount-price">特價</label>
-          <b-form-input v-model="Product.Discount" list="product-discount-price" id="input-product-discount-price" @change="changeSubtotal()"></b-form-input>
+          <b-form-input 
+            v-model="Product.Discount" 
+            :type="'number'"
+            min="0"
+            list="product-discount-price" 
+            id="input-product-discount-price" 
+            @change="changeSubtotal()"></b-form-input>
         </b-col>
         <b-col>
           <label for="input-product-subtotal">小計</label>
-          <b-form-input v-model="Product.Subtotal" list="product-subtotal" id="input-product-subtotal"></b-form-input>
+          <b-form-input 
+            v-model="Product.Subtotal" 
+            :type="'number'"
+            min="0"
+            list="product-subtotal" 
+            id="input-product-subtotal"></b-form-input>
         </b-col>
         <b-col>
           <b-button variant="outline-primary" id="plus" @click="plusitem()">增加</b-button>
@@ -123,15 +169,27 @@
       <b-row>
         <b-col>
           <label for="input-subtotal">總計</label>
-          <b-form-input v-model="Stotal"  list="client-subtotal" id="input-subtotal"></b-form-input>
+          <b-form-input 
+            v-model="Stotal" 
+            :type="'number'" 
+            min="0"
+            id="input-subtotal"></b-form-input>
         </b-col>
         <b-col>
           <label for="input-tax-rate">稅額</label>
-          <b-form-input v-model="Rtotal" list="tax-rate" id="input-tax-rate"></b-form-input>
+          <b-form-input 
+            v-model="Rtotal" 
+            :type="'number'"
+            min="0"
+            id="input-tax-rate"></b-form-input>
         </b-col>
         <b-col>
           <label for="input-total">總額(含稅)</label>
-          <b-form-input v-model="Quotation.total" list="total" id="input-total"></b-form-input>
+          <b-form-input 
+            v-model="Quotation.total"
+            :type="'number'"
+            min="0"
+            id="input-total"></b-form-input>
         </b-col>
       </b-row>
       
@@ -142,48 +200,49 @@
           <label for="input-remark">備註</label>
           <b-form-input 
             v-model="Remark1" 
-            list="input-remark" 
+            :state="Remark1_state"
             id="input-remark-1" 
             required placeholder="硬體及系統保固一年。(天災 , 人為破壞因素損壞不在保固範圍內)"
             @change="Remark()"></b-form-input>
           <br>
           <b-form-input 
-            v-model="Remark2" list="input-remark" 
+            v-model="Remark2" 
+            :state="Remark2_state"
             id="input-remark-2" 
             required placeholder="如有其他增加項目則另外報價。" 
             @change="Remark()"></b-form-input>
           <br>
           <b-form-input 
             v-model="Remark3" 
-            list="input-remark" 
+            :state="Remark3_state"
             id="input-remark-3" 
             required placeholder="出貨地(FOB) : 台灣。" 
             @change="Remark()"></b-form-input>
           <br>
           <b-form-input 
             v-model="Remark4" 
-            list="input-remark" 
+            :state="Remark4_state"
             id="input-remark-4" 
             required placeholder="款項未付清前 , 產品所有權屬於麥威科技所有。" 
             @change="Remark()"></b-form-input>
           <br>
           <b-form-input 
             v-model="Remark5" 
-            list="input-remark" 
+            :state="Remark5_state"
             id="input-remark-5" 
             required placeholder="下單後訂單不可取消。" 
             @change="Remark()"></b-form-input>
           <br>
           <b-form-input 
             v-model="Remark6" 
-            list="input-remark" 
+            :state="Remark6_state" 
             id="input-remark-6" 
             required placeholder="交期與付款條件:下單後一週,TT。" 
             @change="Remark()"></b-form-input>
           <br>
           <b-form-input 
             v-model="Remark7" 
-            list="input-remark" 
+            :state="Remark7_state"
             id="input-remark-7" 
             required placeholder="15天內完成維修。" 
             @change="Remark()"></b-form-input>
@@ -242,7 +301,7 @@ export default{
         Company_Name: '',
         Company_Phone: '',
         Company_Fax: '',
-        Company_ID: ''
+        Customer_ID: ''
       },
         
       //所有的產品資料
@@ -277,6 +336,12 @@ export default{
       Remark5: '下單後訂單不可取消。',
       Remark6: '交期與付款條件:下單後一週,TT。',
       Remark7: '15天內完成維修。',
+
+      State:{
+        Project_name: null,
+        Customer_Name:null,
+
+      }
         
     }
   },
@@ -285,59 +350,135 @@ export default{
     this.getCustomers();
     this.getallProducts();
     this.Remark();
-    window.localStorage.clear();
+  },
+  
+  computed:{
+
+    Customer_ID_State(){
+      if(this.Customer.Customer_ID.length == 0)
+        return null;
+      else
+        return this.Customer.Customer_ID.length == 8 ? null : false
+    },
+    
+    Remark1_state(){
+      return this.Remark1.length == 0 ? false : null
+    },
+    Remark2_state(){
+      return this.Remark2.length == 0 ? false : null
+    },
+    Remark3_state(){
+      return this.Remark3.length == 0 ? false : null
+    },
+    Remark4_state(){
+      return this.Remark4.length == 0 ? false : null
+    },
+    Remark5_state(){
+      return this.Remark5.length == 0 ? false : null
+    },
+    Remark6_state(){
+      return this.Remark6.length == 0 ? false : null
+    },
+    Remark7_state(){
+      return this.Remark7.length == 0 ? false : null
+    },
   },
 
   methods:{
     
+    _state(data){
+      if(data == 1) {
+        //Project_Name
+        if(this.Quotation.Project_Name.length == 0)
+          this.State.Project_name = false;
+        else if(this.Quotation.Project_Name.length != 0)
+          this.State.Project_name = null;
+      }
+      else if(data == 2){
+        //Customer_Name
+        if(this.Customer.Customer_Name.length == 0)
+          this.State.Customer_Name = false;
+        else if(this.Customer.Customer_Name.length != 0)
+          this.State.Customer_Name = null;
+      }
+      
+      //Company_Name
+      if(this.Customer.Company_Name.length == 0)
+        this.State.Company_Name = false;
+      else if(this.Customer.Company_Name.length != 0)
+        this.State.Company_Name = null;
+      //Company_Phone
+      if(this.Customer.Company_Phone.length == 0)
+        this.State.Company_Phone = false;
+      else if(this.Customer.Company_Phone.length != 0)
+        this.State.Company_Phone = null;
+      //Company_Fax
+      if(this.Customer.Company_Fax.length == 0)
+        this.State.Company_Fax = false;
+      else if(this.Customer.Company_Fax.length != 0)
+        this.State.Company_Fax = null;
+
+     },
+    
+
+    btKeyUp(e) {
+      e.target.value = e.target.value.replace(
+        /[`~!@#$%^&*()_\\+=<>?:"{}|,./;'\\[\]·~！@#￥%……&*（）——\-+={}|《》？：“”【】、；‘’，。、]/g,
+        ""
+      );
+    },
+    btKeyUp2(e) {
+      e.target.value = e.target.value.replace(
+        /[`~!@#$%^&*()_\\+=<>?:"{}|,./;'\\[\]·~！@#￥%……&*（）——+={}|《》？：“”【】、；‘’，。、]/g,
+        ""
+      );
+    },
+    
     getCustomers(){
       const that =this;
-      this.$axios.get('http://b521133e3bc2.ngrok.io/api/customers')
+      this.$axios.get('https://1ace-220-135-155-67.ngrok.io/api/customers')
       .then(function (response) {
         // console.log(response);
         that.Customers = response.data.data;
       })
       .catch(function (error) {
         console.log(error);
-      }); 
+      });
     },
 
     searchCustomer(){
-      let search = this.Customer.Customer_Name;
-      for(var i=0; i<this.Customers.length; i++)
-      {
-        if(this.Customers[i].customer_Name == search)
-        {
-          // this.Customer.Customer_Name = this.Customers[i].customer_Name;
-          this.Customer.Company_Name = this.Customers[i].company_Name;
-          this.Customer.Company_Phone = this.Customers[i].company_Phone;
-          this.Customer.Company_Fax = this.Customers[i].company_Fax;
-          this.Customer.Customer_ID = this.Customers[i].customer_ID;
-        }
-      }
+      const that = this;
+      let search = that.Customer.Customer_Name;
+      this.$axios.get("https://1ace-220-135-155-67.ngrok.io/api/customer?search=" + search + "&search_In=1")
+      .then(function (response) {
+        that.Customer.Company_Name = response.data.data[0].company_Name;
+        that.Customer.Company_Phone = response.data.data[0].company_Phone;
+        that.Customer.Company_Fax = response.data.data[0].company_Fax;
+        that.Customer.Customer_ID = response.data.data[0].customer_ID;
+      })
+      .catch(function (error) {
+        console.log(error);
+      });
     },
     searchCompany(){
-      let search = this.Customer.Company_Name;
-      for(var i=0; i<this.Customers.length; i++)
-      {
-        if(this.Customers[i].company_Name == search)
-        {
-          // this.Customer.Customer_Name = this.Customers[i].customer_Name;
-          // this.Customer.Company_Name = this.Customers[i].company_Name;
-          this.Customer.Company_Phone = this.Customers[i].company_Phone;
-          this.Customer.Company_Fax = this.Customers[i].company_Fax;
-          this.Customer.Customer_ID = this.Customers[i].customer_ID;
-        }
-      }
-    },
-    
+      const that = this;
+      let search = that.Customer.Company_Name;
+      this.$axios.get("https://1ace-220-135-155-67.ngrok.io/api/customer?search=" + search + "&search_In=2")
+      .then(function (response) {
+        that.Customer.Company_Phone = response.data.data[0].company_Phone;
+        that.Customer.Company_Fax = response.data.data[0].company_Fax;
+        that.Customer.Customer_ID = response.data.data[0].customer_ID;
+      })
+      .catch(function (error) {
+        console.log(error);
+      });
+    },   
 
     getallProducts(){
       const that =this;
-      this.$axios.get(' http://b521133e3bc2.ngrok.io/api/products')
+      this.$axios.get('https://1ace-220-135-155-67.ngrok.io/api/products')
       .then(function (response) {        
         that.allProducts = response.data.data;
-        // console.log(response);
       })
       .catch(function (error) {
         console.log(error);
@@ -351,17 +492,19 @@ export default{
       this.Product.Subtotal = this.Product.Discount*this.Product.Amount;
     },
     searchProduct(){
-      let search = this.Product.Product_Name;
-      for(var i=0; i<this.allProducts.length; i++)
-      {
-        if(this.allProducts[i].product_Name == search)
-        {
-          this.Product.Price = this.allProducts[i].price;
-          this.Product.Product_ID = this.allProducts[i].product_ID
-          this.changePrice();
-          this.changeSubtotal();
-        }
-      }
+      const that = this;
+      let search = that.Product.Product_Name;
+      let searchPrice;
+      this.$axios.get("https://1ace-220-135-155-67.ngrok.io/api/product?user_id=1&token=SMoQMA3y9mXkJ2qr8Loc&Search=" + search)
+      .then(function (response) {        
+        searchPrice = response.data.data[0].price;
+        that.Product.Price = searchPrice;
+        that.changePrice();
+        that.changeSubtotal();
+      })
+      .catch(function (error) {
+        console.log(error);
+      });
     },
     
     plusitem(){
@@ -375,11 +518,28 @@ export default{
         Discount: this.Product.Discount,
         Subtotal: this.Product.Subtotal,
       }
+      let B=0;
       if(newitem.Product_Name == "" || newitem.Amount == "" || newitem.Price == "" ||
          newitem.Discount == "" || newitem.Subtotal == ""){
            alert("產品表格需填寫完整！");
       }
-      else{
+      else if(this.items.length > 0){
+        for(var i=0;i<this.items.length;i++){
+          if(newitem.Product_Name == this.items[i].Product_Name){
+            alert("產品表格中已有相同產品規格，若要修改請刪除並重新填寫！");
+            B=1;
+            break;
+          }
+          console.log("i="+i);
+        }
+        if(B==0){
+          this.items[this.items.length] = newitem;
+          this.$refs.table.refresh();
+          this.setstotal();
+        }
+        B=0;
+      }
+      else if(this.items.length == 0){
         this.items[this.items.length] = newitem;
         this.$refs.table.refresh();
         this.setstotal();
@@ -444,7 +604,7 @@ export default{
         Rtotal: this.Rtotal,
         i: this.items.length,
       };
-      // console.log(form_data);
+      
       var route = this.$router.resolve({path:'/review'});
       sessionStorage.setItem("user_id",form_data.user_id);
       sessionStorage.setItem("Customer_Name",form_data.Customer.Customer_Name);
@@ -503,12 +663,13 @@ export default{
 
       if(form.Customer.Customer_Name == "" || form.Customer.Company_Name == "" || form.Customer.Company_Phone == "" ||
          form.Customer.Company_Fax == "" || form.Customer.Customer_ID == "" || this.items.length == 0||
-         form.Quotation.Project_Name == "" || form.Quotation.Remark == ""){
-           alert("表單尚未填寫完整！");
+         form.Quotation.Project_Name == "" || this.Remark1 == "" || this.Remark2 == "" || this.Remark3 == "" || 
+         this.Remark4 == "" || this.Remark5 == "" || this.Remark6 == "" || this.Remark7 == ""){
+          alert("表單尚未填寫完整！");          
       }
 
       else{
-        this.$axios.post(' http://b521133e3bc2.ngrok.io/api/quotation',form)
+        this.$axios.post('http://1c7884ba3f78.ngrok.io/api/quotation',form)
         .then(function (response) {
           console.log(response);
         })
@@ -517,6 +678,7 @@ export default{
         }); 
       }
     },
+    
   }
 }
 </script>

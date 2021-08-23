@@ -11,7 +11,7 @@
         <b-col lg="3"  style="text-color:Gray">
           <h2 align="center" style="color:grey"><b>報價單</b></h2>
           <h5 align="center" style="color:grey"><b>Quotation</b></h5>
-          <div class="bg-dark"><hr size=5></div>
+          <div style="border-top: 2px double #000000"></div>
         </b-col>
      </b-row>
      <b-row>
@@ -38,7 +38,7 @@
           <p align="right"><b>日期&emsp;&emsp;</b></p>
           <p align="right"><b>報價單編號&emsp;&emsp;</b></p>
           <p align="right"><b>客戶統一編號&emsp;&emsp;</b></p>
-          <p align="right"><l>報價有效期至&emsp;&emsp;</l></p>
+          <p align="right"><i>報價有效期至&emsp;&emsp;</i></p>
         </b-col>
         <b-col md="2">
           <p>{{today_Date}}</p>
@@ -51,19 +51,19 @@
       <p><b>特別注意事項：</b>1.本報價單經雙方協議成交，經客戶簽章視為正式訂單。</p>
       <div class="flieds">
         <b-row>
-          <b-col style="border-style:solid">
+          <b-col id="border1">
             <p align="center"><b>品名編號</b></p>
           </b-col>
-          <b-col style="border-style:solid"  md="4">
+          <b-col id="border1"  md="4">
             <p align="center"><b>產品規格</b></p>
           </b-col>
-          <b-col style="border-style:solid">
+          <b-col id="border1">
             <p align="center"><b>數量</b></p>
           </b-col>
-          <b-col style="border-style:solid">
+          <b-col id="border1">
             <p align="center"><b>單價</b></p>
           </b-col>
-          <b-col style="border-style:solid" md="2">
+          <b-col id="border1" md="2">
             <p align="center"><b>特價(未稅)</b></p>
           </b-col>
           <b-col style="border-style:solid" md="2">
@@ -75,24 +75,24 @@
         <!--eslint-disable-next-line-->
         <div class="product" v-for="(item, index) in Products">
           <b-row>
-            <b-col style="border-style:solid">
+            <b-col id="border2" >
               <p align="center">{{index+1}}</p>
             </b-col>
-            <b-col style="border-style:solid" md="4">
+            <b-col id="border2" md="4">
               <p>{{item.Product_Name}}<br>{{item.Product_Detail}}</p>
             </b-col>
-            <b-col style="border-style:solid">
+            <b-col id="border2">
               <p align="center">{{item.Amount}}</p>
             </b-col>
-            <b-col style="border-style:solid">
+            <b-col id="border2">
               <span style="float:left">NT$</span>
               <span style="float:right">{{item.Price}}</span>
             </b-col>
-            <b-col style="border-style:solid" md="2">
+            <b-col id="border2" md="2">
               <span style="float:left">NT$</span>
               <span style="float:right">{{item.Discount}}</span>
             </b-col>
-            <b-col style="border-style:solid" md="2">
+            <b-col id="border3" md="2">
               <span style="float:left">NT$</span>
               <span style="float:right">{{item.Subtotal}}</span>
             </b-col>
@@ -114,30 +114,30 @@
           <b-col>
             <b-row>
               <b-col></b-col>
-               <b-col md="4" style="border-style:solid;">
+               <b-col id="border2" md="4">
                 <p align="right" >小計</p>
               </b-col>
-              <b-col  md="4" style="border-style:solid;">
+              <b-col id="border3" md="4">
                 <span style="float:left">NT$</span>
                 <span style="float:right">{{Stotal}}</span>
               </b-col>
             </b-row>
             <b-row>
               <b-col></b-col>
-               <b-col md="4" style="border-style:solid;">
+               <b-col id="border2" md="4">
                 <p align="right">稅額</p>
               </b-col>
-              <b-col  md="4" style="border-style:solid;">
+              <b-col id="border3" md="4">
                 <span style="float:left">NT$</span>
                 <span style="float:right">{{Rtotal}}</span>
               </b-col>
             </b-row>
             <b-row>
               <b-col></b-col>
-               <b-col md="4" style="border-style:solid;">
+               <b-col id="border2" md="4">
                 <p align="right"><b>總計</b></p>
               </b-col>
-              <b-col  md="4" style="border-style:solid;">
+              <b-col id="border3" md="4">
                 <span style="float:left">NT$</span>
                 <span style="float:right">{{Quotation.total}}</span>
               </b-col>
@@ -151,18 +151,19 @@
      
      <b-row>
        <b-col md="4">
-        <p align="center" style="border-style:solid"><b>客戶同意採購簽章：</b></p>
+        <p align="center" style="border-style: solid"><b>客戶同意採購簽章：</b></p>
         <br><br>
        </b-col>
      </b-row>
      <b-row>
        <b-col md="6">
-        <div class="bg-dark"><hr></div>
+        <div class="bg-dark"><hr size=3></div>
+        <br>
        </b-col>
      </b-row>
      <b-row>
        <b-col>
-        <div class="bg-dark"><hr size=5></div>
+        <div style="border-top: 3px double #000000"></div>
         <p align="center">如您有任何疑問，請即聯絡：薛勝榮，0918988747，austin@getmywaytech.com</p>
         <p align="center"><b>祝事業興旺！</b></p>
        </b-col>
@@ -255,7 +256,6 @@ export default{
       this.Products[j] = this.Product;
       this.Product = {};
     }
-    // console.log(this.Products);
     var Today = new Date();
     var Last = new Date();
     Last=Last.setDate(Last.getDate()+30);
@@ -275,10 +275,27 @@ export default{
   background-color: white;
   box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
   // border-radius: 30px;
-  padding:5%
+  // width: 1000px;
+  // height: 1250px;
+  padding:5%;
+
 }
 hr{
   background-color: black !important;
   color: black !important;
+}
+#border1{
+  border-top:solid; 
+  border-left:solid; 
+  border-bottom:solid;
+}
+#border2{
+  border-left:solid; 
+  border-bottom:solid;
+}
+#border3{
+  border-right:solid;
+  border-left:solid; 
+  border-bottom:solid;
 }
 </style>
