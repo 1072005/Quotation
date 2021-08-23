@@ -59,6 +59,10 @@ export const Mainsearch = (Search, Select) => instance.get('quotation?Signback='
 export const PDF = quotation_ID => download.get('file/' + quotation_ID);
 
 // [主頁面]
+/** 上傳回簽檔 */
+export const UploadPDF = (ItemsID,File) => instance.post('file/' + ItemsID,File);
+
+// [主頁面]
 /** 刪除回簽檔 */
 export const DeletePDF = quotationID => instance.delete('file/' + quotationID);
 
@@ -82,6 +86,14 @@ export const Searchcustomer = (CustomerSearch) => instance.get('customer?search=
 /** 刪除客戶 */
 export const Deletecustomer = (Customer_ID) => instance.delete('customer/' + Customer_ID);
 
+// [編輯客戶資料頁面]
+/** 拿取客戶資料 */
+export const GetCustomerEdit = (EditCustomer_ID) => instance.get('customer/' + EditCustomer_ID);
+
+// [編輯客戶資料頁面]
+/** 修改客戶資料 */
+export const PutCustomerEdit = (EditCustomerID,Customer) => instance.put('customer/' + EditCustomerID,Customer);
+
 // [產品資料頁面]
 /** 列出產品 */
 export const Getproduce = () => instance.get('products');
@@ -93,6 +105,15 @@ export const Searchproduce = (ProduceSearch) => instance.get('product?search=' +
 // [產品資料頁面]
 /** 產品刪除 */
 export const Deleteproduce = (Product_ID) => instance.delete('product/' + Product_ID);
+
+// [修改產品資料頁面]
+/** 修改產品資料 */
+export const PutProduceEdit = (EditProductID,Products) => instance.put('product/' + EditProductID,Products);
+
+// [修改產品資料頁面]
+/** 拿取產品資料 */
+export const GetProduceEdit = (ProductID) => instance.get('product/' + ProductID);
+
 
 // [追蹤頁面]
 /** 列出所有項目 */

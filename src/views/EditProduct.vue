@@ -71,11 +71,7 @@ export default {
       };
 
       console.log(Products);
-      this.$axios
-        .put(
-          "https://8dddbfe2067c.ngrok.io/api/product/" + this.items.Product_ID,
-          Products
-        )
+      this.$api.PutProduceEdit(this.items.Product_ID,Products)
         .then(function () {
           alert("修改成功");
           that.$router.push({ path: "reviseproduce" });
@@ -94,9 +90,9 @@ export default {
     var data1 = JSON.parse(localStorage.getItem("producedata"));
     this.items = data1;
     const that = this;
-    this.$axios
-      .get("https://8dddbfe2067c.ngrok.io/api/product/" + this.items.Product_ID)
+    this.$api.GetProduceEdit(this.items.Product_ID)
       .then(function (response) {
+        console.log(response)
         that.Product_Name = response.data.data.product_Name;
         that.Price = response.data.data.price;
       })

@@ -54,17 +54,16 @@ export default {
     },
     postdata() {
       const that=this;
-      this.$axios
-        .post("https://8dddbfe2067c.ngrok.io/api/file/"+this.items.id,this.formData)
+      this.$api.UploadPDF(that.items.id,that.formData)
         .then(function (response) {
-          console.log(response);
+          console.log(response)
           if (response.data.status_Code == 2000) {
             alert(that.file.name + "上傳成功");
             that.$router.push({ path: "Mainpage" });
             localStorage.clear();
           } else {
-            alert(response.message);
-            this.$router.push({ path: "upload" });
+            alert(response.data.message);
+            //  window.location.reload();
           }
         })
         .catch(function (error) {

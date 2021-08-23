@@ -63,14 +63,12 @@
                   style="color: black"
                   size="4x"
                   v-if="item.isSignback != true"
-                  @click="$router.push('upload')"
-                  v-bind="
-                    storedata(
-                      item.quotation_ID,
-                      item.company_Name,
-                      item.project_Name
-                    )
-                  "
+                  @click="               storedata(
+                      items[index].quotation_ID,
+                      items[index].company_Name,
+                      items[index].project_Name
+                    )"
+
                 />
 
                 <font-awesome-icon
@@ -248,7 +246,9 @@ export default {
         company: company_name,
         project: project_name,
       };
+      console.log(info)
       localStorage.setItem("localdata", JSON.stringify(info));
+      this.$router.push({ path: "upload" });
     },
   },
   mounted() {
