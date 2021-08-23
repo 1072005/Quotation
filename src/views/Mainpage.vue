@@ -91,13 +91,14 @@
                 />
               </div>
             </div>
-            <div class="edit" @click="$router.push('Form')">
+            <div class="edit">
               <div class="mainicon">
                 <font-awesome-icon
                   class="penicon"
                   :icon="['fas', 'pen']"
                   style="color: black"
                   size="4x"
+                   @click="goeditform(index)"
                 />
               </div>
             </div>
@@ -194,6 +195,11 @@ export default {
         .catch(function (error) {
           console.log(error);
         });
+    },
+    goeditform(index){
+      const id =this.items[index].quotation_ID;
+      localStorage.setItem("editformID", id);
+      this.$router.push('Form')
     },
     deleteupload(index) {
       let result = window.confirm("確定要刪除回簽檔嗎");
