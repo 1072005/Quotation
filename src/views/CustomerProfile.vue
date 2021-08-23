@@ -5,7 +5,11 @@
       <b-col md="10" offset-md="2" class="rightside">
         <h1>客戶資料</h1>
         <b-col md="4" class="search">
-          <b-form-input placeholder="搜尋"></b-form-input>
+          <b-form-input
+            placeholder="搜尋"
+            v-model="search"
+            v-on:keyup.enter="SendSearch()"
+          ></b-form-input>
         </b-col>
 
         <b-col md="9" class="main">
@@ -80,23 +84,12 @@ export default {
     return {
       perPage: 6,
       currentPage: 1,
+      search: "",
       items: [],
     };
   },
   mounted() {
-    //  const that=this
-    this.$axios
-      .get("https://8dddbfe2067c.ngrok.io/api/customer")
-      .then((response) => {
-        this.items = response.data.data;
-
-        console.log("apistart");
-        console.log(this.items);
-      })
-      .catch(function (error) {
-        // 请求失败处理
-        console.log(error);
-      });
+    this.get_data();
   },
   computed: {
     rows() {
@@ -104,29 +97,54 @@ export default {
     },
   },
   methods: {
+    get_data: function () {
+      this.$api
+        .Getcustomer()
+        .then((response) => {
+          this.items = response.data.data;
+        })
+        .catch(function (error) {
+          // 请求失败处理
+          console.log(error);
+        });
+    },
     editclient(CustomerID) {
       const that = this;
       const customer = {
         CustomerID: CustomerID,
       };
-      
+
       localStorage.setItem("customerdata", JSON.stringify(customer));
       that.$router.push({ path: "editclient" });
     },
     deletedata(index) {
-      console.log(this.items[index].customer_ID);
-      this.$axios
-        .delete(
-          "https://8dddbfe2067c.ngrok.io/api/customer/" +
-            this.items[index].customer_ID
-        )
-        .then(function (response) {
-          window.location.reload();
-          console.log(response);
-        })
-        .catch(function (error) {
-          console.log(error);
-        });
+      let result = window.confirm("確定要刪除這筆資料嗎");
+      if (result == true) {
+        this.$api.Deletecustomer(this.items[index].customer_ID)
+          .then(function (response) {
+            if (response.data.status_Code == 2000) {
+              window.location.reload();
+            }
+          })
+          .catch(function (error) {
+            console.log(error);
+          });
+      }
+    },
+    SendSearch() {
+      const that = this;
+      if (this.search == "") {
+        this.get_data();
+      } else {
+        this.$api.Searchcustomer(that.search)
+          .then(function (response) {
+            that.items = response.data.data;
+            console.log(response)
+          })
+          .catch(function (error) {
+            console.log(error);
+          });
+      }
     },
   },
 };
@@ -148,7 +166,7 @@ export default {
 }
 .customername {
   display: inline-block;
-  width: 344px;
+  width: 300px;
   height: 100px;
   text-align: center;
   line-height: 100px;

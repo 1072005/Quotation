@@ -73,7 +73,7 @@ export default {
       console.log(Products);
       this.$axios
         .put(
-          "https://8dddbfe2067c.ngrok.io/api/product/" + this.items.Product_ID,
+          "http://b521133e3bc2.ngrok.io/api/product/" + this.items.Product_ID,
           Products
         )
         .then(function () {
@@ -95,7 +95,7 @@ export default {
     this.items = data1;
     const that = this;
     this.$axios
-      .get("https://8dddbfe2067c.ngrok.io/api/product/" + this.items.Product_ID)
+      .get("http://b521133e3bc2.ngrok.io/api/product/" + this.items.Product_ID)
       .then(function (response) {
         that.Product_Name = response.data.data.product_Name;
         that.Price = response.data.data.price;

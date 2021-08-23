@@ -5,9 +5,26 @@
       <b-col md="10" offset-md="2" class="rightside">
         <h1>追蹤表單</h1>
         <b-col md="4" class="search">
-          <b-form-input placeholder="搜尋"></b-form-input>
+          <b-form-input
+            placeholder="搜尋"
+            v-model="search"
+            v-on:keyup.enter="SendSearch()"
+          ></b-form-input>
         </b-col>
-
+        <b-col offset-md="3" class="selete">
+          <b-form-select
+            v-model="trackselected"
+            :options="trackoptions"
+            @input="postisback()"
+          ></b-form-select>
+        </b-col>
+        <b-col offset-md="1" class="selete">
+          <b-form-select
+            v-model="payselected"
+            :options="payoptions"
+            @input="postisback()"
+          ></b-form-select>
+        </b-col>
         <b-col md="9" class="main">
           <b-col
             class="inbox"
@@ -19,54 +36,58 @@
             )"
             :key="item.id"
           >
-            <div class="track">
+            <div class="track" v-bind:class="{ voidcolor: check(item.status) }">
               <div class="innerdiv" :title="item.isSignback">
-                {{ item.company_Name }}
+                {{ item.status }}
               </div>
             </div>
-            <div class="trackdata">
+            <div class="trackdata" v-bind:class="{ voidcolor: check(item.status) }">
               <div class="innerdiv">{{ item.quotation_ID }}</div>
             </div>
 
-            <div class="projectname">
+            <div class="projectname" v-bind:class="{ voidcolor: check(item.status) }">
               <div class="innerdiv" :title="item.project_Name">
                 {{ item.project_Name }}
               </div>
             </div>
 
-            <div class="remark">
+            <div class="remark" v-bind:class="{ voidcolor: check(item.status) }">
               <div class="innerdiv" :title="item.remark">
-                {{ item.isSignback }}
+                {{ item.project_Remark }}
               </div>
             </div>
-            <div class="back">
+            <!-- <div class="remark"> 發票欄位
+              <div class="innerdiv" :title="item.remark">
+                {{ item.bill}}
+              </div>
+            </div> -->
+            <div class="back" v-bind:class="{ voidcolor: check(item.status) }">
               <div class="mainicon">
                 <font-awesome-icon
-                  class="uploadicon"
-                  :icon="['fas', 'cloud-upload-alt']"
+                  class="moneyicon"
+                  :icon="['fas', 'dollar-sign']"
                   style="color: black"
                   size="4x"
+                  v-if="item.payment_Status != true"
+                />
+
+                <font-awesome-icon
+                  class="moneyicon"
+                  :icon="['fas', 'check-circle']"
+                  style="color: blue"
+                  size="4x"
+                  v-else
                 />
               </div>
             </div>
-            <div class="back">
+            <div class="delete" v-bind:class="{ voidcolor: check(item.status) }">
               <div class="mainicon">
                 <font-awesome-icon
                   class="uploadicon"
                   :icon="['fas', 'pen']"
                   style="color: black"
                   size="4x"
-                />
-              </div>
-            </div>
-
-            <div class="delete">
-              <div class="mainicon">
-                <font-awesome-icon
-                  class="trashicon"
-                  :icon="['fas', 'trash']"
-                  style="color: black"
-                  size="4x"
+                  @click="storedata(item.quotation_ID, item.project_Name)"
                 />
               </div>
             </div>
@@ -98,30 +119,104 @@ export default {
     return {
       perPage: 6,
       currentPage: 1,
-
-      items: [
-        //  { quotation_ID:'123',project_Name:'465465',remark:'45646'}
+      trackselected: 1,
+      payselected: 1,
+      payment_Status: "",
+      search: "",
+      isActive: "",
+      noactive: "false",
+      trackoptions: [
+        { value: "1", text: "顯示全部" },
+        { value: "2", text: "待追蹤" },
+        { value: "3", text: "進行中" },
+        { value: "4", text: "完成" },
+        { value: "5", text: "作廢" },
+        { value: "6", text: "其他" },
       ],
-      product: [],
+      payoptions: [
+        { value: "1", text: "顯示全部" },
+        { value: "2", text: "未付款" },
+        { value: "3", text: "已付款" },
+      ],
+      items: [],
       file: null,
     };
   },
-
+  methods: {
+    get_data: function () {
+      this.$api.Gettrack()
+        .then((response) => {
+          this.items = response.data.data;
+          for (var i = 0; i < this.items.length; i++) {
+            if (this.items[i].project_Remark == "") {
+              this.items[i].project_Remark = "備註";
+            }
+          }
+        })
+        .catch(function (error) {
+          // 请求失败处理
+          console.log(error);
+        });
+    },
+    postisback() {
+      const that = this;
+      if (this.trackselected == 1 && this.payselected == 1) {
+        this.get_data();
+      } else {
+        this.$api.Getselect(this.trackselected,this.payselected)
+          .then(function (response) {
+            that.items = response.data.data;
+            for (var i = 0; i < that.items.length; i++) {
+              if (that.items[i].project_Remark == "") {
+                that.items[i].project_Remark = "備註";
+              }
+            }
+            console.log(response);
+          })
+          .catch(function (error) {
+            console.log(error);
+          });
+      }
+    },
+    SendSearch() {
+      const that = this;       
+      if (this.search == "") {
+        this.get_data();
+      } else {
+        this.$api.Getsearch(this.trackselected,this.payselected,this.search)
+          .then(function (response) {
+            console.log(response);
+            that.items = response.data.data;
+            for (var i = 0; i < that.items.length; i++) {
+              if (that.items[i].project_Remark == "") {
+                that.items[i].project_Remark = "備註";
+              }
+            }
+          })
+          .catch(function (error) {
+            console.log(error);
+          });
+      }
+    },
+    storedata(quotation_id, project_name) {
+      const info = {
+        id: quotation_id,
+        project: project_name,
+      };
+      localStorage.setItem("trackdata", JSON.stringify(info));
+      this.$router.push("edittrackpage");
+    },
+    check(status) {
+      if(status=="作廢"){
+        return true;
+      }
+      else{
+        return false;
+      }
+    },
+  },
   mounted() {
-    //  const that=this
-    this.$axios
-      .get("https://8dddbfe2067c.ngrok.io/api/quotations")
-      .then((response) => {
-        console.log(response);
-        this.items = response.data.data;
-
-        console.log("apistart");
-        console.log(this.items);
-      })
-      .catch(function (error) {
-        // 请求失败处理
-        console.log(error);
-      });
+    this.get_data();
   },
   computed: {
     rows() {
@@ -134,7 +229,7 @@ export default {
 <style >
 .remark {
   display: inline-block;
-  width: 416px;
+  width: 600px;
   height: 100px;
   text-align: center;
   line-height: 100px;
@@ -142,17 +237,17 @@ export default {
   border-left: none;
 }
 
-.track{
+.track {
   display: inline-block;
-  width: 10%;
+  width: 8%;
   height: 100px;
   text-align: center;
   line-height: 100px;
   border: solid 1px black;
   border-radius: 10% 0% 0% 10%;
 }
-.trackdata{
-    display: inline-block;
+.trackdata {
+  display: inline-block;
   width: 10%;
   height: 100px;
   text-align: center;
@@ -162,11 +257,18 @@ export default {
 }
 .projectname {
   display: inline-block;
-  width: 350px;
+  width: 300px;
   height: 100px;
   text-align: center;
   line-height: 100px;
   border: solid 1px black;
   border-left: none;
+}
+.voidcolor {
+  
+  background-color: #BEBEBE;
+}
+.moneyicon{
+  padding-top: 25px;
 }
 </style>

@@ -11,9 +11,12 @@
         @keyup.native="btKeyUp"
       />
       <p>密碼</p>
-      <mdb-input icon="lock" placeholder="請輸入密碼" :type="typ"
-      v-model="Password"
-      @keyup.native="btKeyUp"
+      <mdb-input
+        icon="lock"
+        placeholder="請輸入密碼"
+        :type="typ"
+        v-model="Password"
+        @keyup.native="btKeyUp"
       />
       <font-awesome-icon
         class="eyeicon"
@@ -36,6 +39,7 @@
 
 <script>
 import { mdbInput } from "mdbvue";
+
 export default {
   name: "Basic",
   components: {
@@ -57,20 +61,24 @@ export default {
       this.typ = "password";
     },
     btKeyUp(e) {
-       e.target.value = e.target.value.replace(/[`~!@#$%^&*()_\-+=<>?:"{}|,./;'\\[\]·~！@#￥%……&*（）——\-+={}|《》？：“”【】、；‘’，。、]/g,"");
+      e.target.value = e.target.value.replace(
+        /[`~!@#$%^&*()_\-+=<>?:"{}|,./;'\\[\]·~！@#￥%……&*（）——\-+={}|《》？：“”【】、；‘’，。、]/g,
+        ""
+      );
     },
     postdata() {
       let parms = {
         Account: this.Account,
         Password: this.Password,
       };
-
       const that = this;
-      this.$axios
-        .post("https://8dddbfe2067c.ngrok.io/api/signin", parms)
+      this.$api
+        .UserLogin(parms)
         .then(function (response) {
-          console.log(response);
           if (response.data.status_Code == 2000) {
+            that.$store.commit("set_token", response.data.token);
+            that.$store.commit("set_Userinfo", response.data.user_ID);
+
             that.$router.push({ path: "Mainpage" });
           } else {
             that.isShow = "false";

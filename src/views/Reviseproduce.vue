@@ -5,7 +5,11 @@
       <b-col md="10" offset-md="2" class="rightside">
         <h1>產品資料</h1>
         <b-col md="4" class="search">
-          <b-form-input placeholder="搜尋"></b-form-input>
+          <b-form-input
+            placeholder="搜尋"
+            v-model="search"
+            v-on:keyup.enter="SendSearch()"
+          ></b-form-input>
         </b-col>
 
         <b-col md="9" class="main">
@@ -13,7 +17,7 @@
             class="inbox"
             id="my-table"
             small
-            v-for="item in items.slice(
+            v-for="(item, index) in items.slice(
               (this.currentPage - 1) * this.perPage,
               this.currentPage * this.perPage
             )"
@@ -48,6 +52,7 @@
                   :icon="['fas', 'trash']"
                   style="color: black"
                   size="4x"
+                  @click="deletedata(index)"
                 />
               </div>
             </div>
@@ -79,6 +84,7 @@ export default {
     return {
       perPage: 6,
       currentPage: 1,
+      search: "",
       items: [],
     };
   },
@@ -88,6 +94,16 @@ export default {
     },
   },
   methods: {
+    get_data: function () {
+      this.$api.Getproduce()
+        .then((response) => {
+          this.items = response.data.data;
+        })
+        .catch(function (error) {
+          // 请求失败处理
+          console.log(error);
+        });
+    },
     editproduce(ProduceID) {
       const that = this;
       const produce = {
@@ -96,19 +112,39 @@ export default {
       localStorage.setItem("producedata", JSON.stringify(produce));
       that.$router.push({ path: "editproduct" });
     },
+    SendSearch() {
+      const that = this;
+      if (this.search == "") {
+        this.get_data();
+      } else {
+        this.$api.Searchproduce(this.search)
+          .then(function (response) {
+            console.log(response);
+            that.items = response.data.data;
+          })
+          .catch(function (error) {
+            console.log(error);
+          });
+      }
+    },
+    deletedata(index) {
+      let result = window.confirm("確定要刪除檔案嗎?");
+      if (result == true) {
+        this.$api.Deleteproduce(this.items[index].product_ID)
+          .then(function (response) {
+            if (response.data.status_Code == 2000) {
+              window.location.reload();
+            }
+          })
+          .catch(function (error) {
+            console.log(error);
+          });
+      }
+    },
   },
   mounted() {
-     window.localStorage.removeItem('producedata')
-    //  const that=this
-    this.$axios
-      .get("https://8dddbfe2067c.ngrok.io/api/products")
-      .then((response) => {
-        this.items = response.data.data;
-      })
-      .catch(function (error) {
-        // 请求失败处理
-        console.log(error);
-      });
+    window.localStorage.removeItem("producedata");
+    this.get_data();
   },
 };
 </script>

@@ -6,7 +6,10 @@
         ><p>{{ account_id }}</p></b-col
       >
       <b-col md-3
-        ><b-button  @click="$router.push('formtype').catch(()=>{})">
+        ><b-button
+          class="topbtn"
+          @click="$router.push('formtype').catch(() => {})"
+        >
           <font-awesome-icon
             class="sideicon"
             :icon="['fas', 'file']"
@@ -15,7 +18,7 @@
         ></b-col
       >
       <b-col md-3
-        ><b-button @click="$router.push('Mainpage').catch(()=>{})">
+        ><b-button @click="$router.push('Mainpage').catch(() => {})">
           <font-awesome-icon
             class="sideicon"
             :icon="['fas', 'file-alt']"
@@ -24,7 +27,7 @@
         ></b-col
       >
       <b-col md-3>
-        <b-button @click="$router.push('customerprofile').catch(()=>{})"
+        <b-button @click="$router.push('customerprofile').catch(() => {})"
           ><font-awesome-icon
             class="sideicon"
             :icon="['fas', 'pen']"
@@ -33,7 +36,7 @@
         ></b-col
       >
       <b-col md-3>
-        <b-button @click="$router.push('reviseproduce').catch(()=>{})"
+        <b-button @click="$router.push('reviseproduce').catch(() => {})"
           ><font-awesome-icon
             class="sideicon"
             :icon="['fas', 'pen']"
@@ -42,7 +45,7 @@
         ></b-col
       >
       <b-col md-3
-        ><b-button @click="$router.push('trackpage').catch(()=>{})"
+        ><b-button @click="$router.push('trackpage').catch(() => {})"
           ><font-awesome-icon
             class="sideicon"
             :icon="['fas', 'signal']"
@@ -51,7 +54,7 @@
         ></b-col
       >
       <b-col md-3
-        ><b-button
+        ><b-button @click="logout()"
           ><font-awesome-icon
             class="sideicon"
             :icon="['fas', 'sign-out-alt']"
@@ -75,11 +78,15 @@ export default {
     newpage() {
       this.$router.push({ path: "/newpage" });
     },
+    logout() {
+      this.$store.commit("del_token");
+      this.$router.push({ path: "/" });
+    },
   },
   mounted() {
     const that = this;
-    this.$axios
-      .get("https://8dddbfe2067c.ngrok.io/api/signin")
+    this.$api
+      .Getuser()
       .then(function (response) {
         console.log(response);
         that.account_id = response.data.account;
@@ -99,7 +106,8 @@ export default {
   left: 50px;
 }
 .sidebar p {
-  margin-top: 10px;
+  margin-top: 15px;
+  font-size: 1.5rem;
   font-weight: bold;
 }
 .sidebar h1 {
@@ -108,11 +116,14 @@ export default {
 .sidebar .btn {
   margin-left: -15px;
   width: 110%;
-  margin-top: 25px;
+  margin-top: 30px;
   color: black;
   font-size: 1.7rem;
   font-weight: bold;
   text-align: left;
+}
+.topbtn {
+  margin-top: 5px !important;
 }
 .btn-secondary {
   background-color: #cee6f1;

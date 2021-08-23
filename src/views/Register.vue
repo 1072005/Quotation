@@ -33,7 +33,19 @@
         v-model="company_id"
         @keyup.native="btKeyUp"
       />
-      <p class="message" v-show="isShow">{{message}}</p>
+      <div class="radio">
+        <b-form-checkbox
+          id="checkbox-1"
+          v-model="status"
+          name="checkbox-1"
+          value="accepted"
+          unchecked-value="not_accepted"
+        >
+          我已閱讀並同意
+          <a href="https://google.com/" target="_blank">條款</a>
+        </b-form-checkbox>
+      </div>
+      <p class="message" v-show="isShow">{{ message }}</p>
       <div class="text-center inbtn">
         <b-button variant="primary" class="col-12" @click="postdata"
           >註冊</b-button
@@ -60,7 +72,8 @@ export default {
       Account: "",
       Password: "",
       company_id: "",
-      message:''
+      message: "",
+      status: "not_accepted",
     };
   },
   methods: {
@@ -80,25 +93,30 @@ export default {
       let parms = {
         Account: this.Account,
         Password: this.Password,
-        company_id:this.company_id
+        company_id: this.company_id,
       };
 
       const that = this;
-      this.$axios
-        .post("https://8dddbfe2067c.ngrok.io/api/signup", parms)
-        .then(function (response) {
-          console.log(response);
-          if (response.data.status_Code == 2000) {
-              alert('註冊成功')
-           that.$router.push({ path: "/" });
-          } else {
-            that.isShow = "false";
-            that.message=response.data.message
-          }
-        })
-        .catch(function (error) {
-          console.log(error);
-        });
+      if (this.status == "not_accepted") {
+        alert('請閱讀完條款後勾選以閱讀並同意')
+      } 
+      else {
+        this.$axios
+          .post("https://1ace-220-135-155-67.ngrok.io/api/users/signup", parms)
+          .then(function (response) {
+            console.log(response);
+            if (response.data.status_Code == 2000) {
+              alert("註冊成功");
+              that.$router.push({ path: "/" });
+            } else {
+              that.isShow = "false";
+              that.message = response.data.message;
+            }
+          })
+          .catch(function (error) {
+            console.log(error);
+          });
+      }
     },
   },
 };
@@ -107,7 +125,7 @@ export default {
 <style scoped lang="scss">
 .grey-text {
   width: 20%;
-  height: 520px;
+  height: 550px;
   margin: 0 auto;
   padding: 20px;
   background-color: white;
@@ -143,6 +161,9 @@ form {
   padding-top: 0px !important;
   color: red;
   font-size: 1rem !important;
+}
+.radio {
+  font-size: 1rem;
 }
 </style>
 
