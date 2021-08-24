@@ -49,6 +49,7 @@ export default {
   
   methods:{
     goTo(){
+      localStorage.removeItem('editformID');
       // let selected_data= {
       //   selected: this.selected
       // };

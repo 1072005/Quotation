@@ -101,6 +101,7 @@
             ysize="sm"
             rows="1"
             max-rows="1"
+            wrap="hard"
           ></b-form-textarea>
           <!-- <b-form-input v-model="Product.Product_Detail" list="product-detail" id="input-product-detail"></b-form-input> -->
         </b-col>
@@ -153,8 +154,12 @@
       <br>
       <div>
       <b-row>
-        <b-table :items="items" :fields="fields" :bordered="bordered" align="center" ref="table">
-          
+        <b-table data-escape="true" :items="items" :fields="fields" :bordered="bordered" align="center" ref="table">
+          <template v-slot:cell(Product_Detail)="row">
+            <p size="sm" style="overflow-wrap: nomal" v-html="row.item.Product_Detail.replace(/(\r\n|\n|\r)/gm,' <br/>')">
+             {{row.item.Product_Detail}}
+            </p>
+          </template>
           <template v-slot:cell(delete)="row">
             <b-button size="sm" @click="deleterowitem(row.item)" class="mr-2">
               刪除
@@ -271,9 +276,8 @@
 </template>
 
 <script>
+import download from "downloadjs";
 export default{
-  name: "Form",
-  el: "#main",
   data(){
     return{
 
@@ -385,15 +389,50 @@ export default{
   },
 
   methods:{
-    
+
     getForm(){
+      const that = this;
       let id;
-      id = window.localStorage.setItem("editformID");
+      id = window.localStorage.getItem("editformID");
       console.log(id);
+      this.$api
+      .GetFormID(id)
+      .then(function (response) {
+        console.log(response);
+
+        that.Customer.Customer_Name = response.data.data.customer.customer_Name;
+        that.Customer.Company_Name = response.data.data.customer.company_Name;
+        that.Customer.Company_Phone = response.data.data.customer.company_Phone;
+        that.Customer.Customer_ID = response.data.data.customer.customer_ID;
+        that.Customer.Customer_ID = response.data.data.customer.customer_ID;
+
+        for(var i=0;i<response.data.data.products.length; i++){
+          that.Product.Product_ID = response.data.data.products[i].product_ID;
+          that.Product.Product_Name = response.data.data.products[i].product_Name;
+          that.Product.Product_Detail = response.data.data.products[i].product_Detail;
+          that.Product.Price = response.data.data.products[i].price;
+          that.Product.Discount = response.data.data.products[i].discount;
+          that.Product.Subtotal = response.data.data.products[i].subtotal;
+          
+          that.Products[i] = that.Product;
+          that.plusitem();
+        }
+
+        that.Quotation.Project_Name = response.data.data.quotation.project_Name;
+       
+        that.Remark1 = response.data.data.quotation.remark[0];
+        that.Remark2 = response.data.data.quotation.remark[1];
+        that.Remark3 = response.data.data.quotation.remark[2];
+        that.Remark4 = response.data.data.quotation.remark[3];
+        that.Remark5 = response.data.data.quotation.remark[4];
+        that.Remark6 = response.data.data.quotation.remark[5];
+        that.Remark7 = response.data.data.quotation.remark[6];        
+      })
+      .catch(function (error) {
+        console.log(error);
+      });
     },
-
-    
-
+  
     btKeyUp(e) {
       e.target.value = e.target.value.replace(
         /[`~!@#$%^&*()_\\+=<>?:"{}|,./;'\\[\]·~！@#￥%……&*（）——\-+={}|《》？：“”【】、；‘’，。、]/g,
@@ -508,7 +547,6 @@ export default{
             B=1;
             break;
           }
-          console.log("i="+i);
         }
         if(B==0){
           this.items[this.items.length] = newitem;
@@ -619,30 +657,30 @@ export default{
 
 
     postform(){
-
+      const that = this;
       let form={
         user_id: 1,
         token: "SMoQMA3y9mXkJ2qr8Loc",
         Customer: {
-          Customer_Name: this.Customer.Customer_Name,
-          Company_Name: this.Customer.Company_Name,
-          Company_Phone: this.Customer.Company_Phone,
-          Company_Fax: this.Customer.Company_Fax,
-          Customer_ID: this.Customer.Customer_ID
+          Customer_Name: that.Customer.Customer_Name,
+          Company_Name: that.Customer.Company_Name,
+          Company_Phone: that.Customer.Company_Phone,
+          Company_Fax: that.Customer.Company_Fax,
+          Customer_ID: that.Customer.Customer_ID
         },
-        Products: this.items,
+        Products: that.items,
         Quotation: {
-          Project_Name: this.Quotation.Project_Name,
-          Project_Owner: this.user_id,
-          Remark: this.Quotation.Remark,
-          total: this.Quotation.total
+          Project_Name: that.Quotation.Project_Name,
+          Project_Owner: that.user_id,
+          Remark: that.Quotation.Remark,
+          total: that.Quotation.total
         }
       };      
 
       if(form.Customer.Customer_Name == "" || form.Customer.Company_Name == "" || form.Customer.Company_Phone == "" ||
-         form.Customer.Company_Fax == "" || form.Customer.Customer_ID == "" || this.items.length == 0||
-         form.Quotation.Project_Name == "" || this.Remark1 == "" || this.Remark2 == "" || this.Remark3 == "" || 
-         this.Remark4 == "" || this.Remark5 == "" || this.Remark6 == "" || this.Remark7 == ""){
+         form.Customer.Company_Fax == "" || form.Customer.Customer_ID == "" || that.items.length == 0||
+         form.Quotation.Project_Name == "" || that.Remark1 == "" || that.Remark2 == "" || that.Remark3 == "" || 
+         that.Remark4 == "" || that.Remark5 == "" || that.Remark6 == "" || that.Remark7 == ""){
           alert("表單尚未填寫完整！");          
       }
 
@@ -651,6 +689,9 @@ export default{
         .PostForm(form)
         .then(function (response) {
           console.log(response);
+          const content = response.headers["content-type"];
+          download(response.data, that.Quotation.Project_Name,content);
+          that.$router.push({ path: "Mainpage" });
         })
         .catch(function (error) {
           console.log(error);

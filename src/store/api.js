@@ -2,11 +2,11 @@ import axios from 'axios'
 import store from './index'
 
 const instance = axios.create({
-    baseURL: 'https://1ace-220-135-155-67.ngrok.io/api/'
+    baseURL: 'http://e3f7-220-135-155-67.ngrok.io/api/'
     //   baseURL: 'api/v1'
 })
 const download = axios.create({
-    baseURL: 'https://1ace-220-135-155-67.ngrok.io/api/',
+    baseURL: 'http://e3f7-220-135-155-67.ngrok.io/api/',
     responseType: 'blob'
     //   baseURL: 'api/v1'
 })
@@ -158,4 +158,4 @@ export const SearchCompany = (CompanySearch) => instance.get('customer?search=' 
 
 // [填寫表單頁面]
 /**  送出表單 */
-export const PostForm = (Form) => instance.post('/quotation',Form);
+export const PostForm = (Form) => download.post('/quotation',Form);
