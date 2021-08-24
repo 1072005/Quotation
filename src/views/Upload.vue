@@ -60,7 +60,7 @@ export default {
           if (response.data.status_Code == 2000) {
             alert(that.file.name + "上傳成功");
             that.$router.push({ path: "Mainpage" });
-            localStorage.clear();
+            localStorage.removeItem('localdata');
           } else {
             alert(response.data.message);
             //  window.location.reload();
