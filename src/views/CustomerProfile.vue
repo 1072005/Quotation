@@ -11,7 +11,13 @@
             v-on:keyup.enter="SendSearch()"
           ></b-form-input>
         </b-col>
-
+    <b-row class="upper">
+          <b-col class="produces">客戶名稱</b-col>
+          <b-col class="producesprice">公司名稱</b-col>
+          <b-col class="producesedits">編輯</b-col>
+          <b-col class="producesdeletes">刪除</b-col>
+        </b-row>
+        <hr />
         <b-col md="9" class="main">
           <b-col
             class="inbox"
@@ -119,6 +125,10 @@ export default {
     },
     deletedata(index) {
       let result = window.confirm("確定要刪除這筆資料嗎");
+             const that = this;
+      if (that.currentPage != 1) {
+        index = 6 * that.currentPage - 6 + index;
+      }
       if (result == true) {
         this.$api.Deletecustomer(this.items[index].customer_ID)
           .then(function (response) {
@@ -175,11 +185,28 @@ export default {
 }
 .customerproduce {
   display: inline-block;
-  width: 837px;
+  width: 885px;
   height: 100px;
   text-align: center;
   line-height: 100px;
   border: solid 1px black;
   border-left: none;
 }
+.produces{
+  position: relative;
+  left: 130px;
+}
+.producesprice{
+  position: relative;
+  left: 540px;
+}
+.producesedits{
+  position: relative;
+  margin-left: 870px;
+}
+.producesdeletes{
+    position: relative;
+  right: 70px;
+}
+
 </style>
