@@ -7,7 +7,7 @@
       <b-row>
         <b-col>
           <img v-bind="mainProps" src="../assets/Form_example_myway.png" alt="img1" >
-          <b-form-radio v-model="selected" :state="state" name="some-radios" value="A">麥威科技</b-form-radio>
+          <b-form-radio v-model="selected" name="some-radios" value="A">麥威科技</b-form-radio>
         </b-col>
         <b-col>
           <b-img  v-bind="mainProps" blank-color="#777" alt="img2" d></b-img>
@@ -39,7 +39,7 @@
 
 <script>
 export default {
-  name:"FormTypePage",
+  
   data() {
     return {
       mainProps: { blank: true, width: 145, height: 205.07, class: 'm1' },

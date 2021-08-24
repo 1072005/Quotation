@@ -1,7 +1,7 @@
 <template>
  <div id="bg">
    <b-container fluid class="bv-example-row">
-    <p class="h2 text-center mb-4">填寫新表單</p>
+    <p class="h2 text-center mb-4" v-text="title">{{title}}</p>
     <b-form id="main" autocomplete="off">
        <b-row>
         <b-col>
@@ -265,7 +265,6 @@
         <b-button variant="outline-primary" id="console" @click="$router.push('Mainpage')">取消</b-button>
       </b-col>
     </b-row>
-
    </b-container>
  </div>
 
@@ -276,7 +275,7 @@ import download from "downloadjs";
 export default{
   data(){
     return{
-
+      title: "填寫新表單",
       fields: 
       [ 
         { key: 'Product_Name', label: '產品規格' },
@@ -340,9 +339,7 @@ export default{
       State:{
         Project_name: null,
         Customer_Name:null,
-
-      }
-        
+      }        
     }
   },
 
@@ -421,6 +418,51 @@ export default{
      },
     
 
+    getForm(){
+      const that = this;
+      let id;
+      id = window.localStorage.getItem("editformID");
+      if(id != null){
+        that.title = "編輯表單"
+        this.$api
+        .GetFormID(id)
+        .then(function (response) {
+          console.log(response);
+
+          that.Customer.Customer_Name = response.data.data.customer.customer_Name;
+          that.Customer.Company_Name = response.data.data.customer.company_Name;
+          that.Customer.Company_Phone = response.data.data.customer.company_Phone;
+          that.Customer.Customer_ID = response.data.data.customer.customer_ID;
+          that.Customer.Customer_ID = response.data.data.customer.customer_ID;
+
+          for(var i=0;i<response.data.data.products.length; i++){
+            that.Product.Product_ID = response.data.data.products[i].product_ID;
+            that.Product.Product_Name = response.data.data.products[i].product_Name;
+            that.Product.Product_Detail = response.data.data.products[i].product_Detail;
+            that.Product.Price = response.data.data.products[i].price;
+            that.Product.Discount = response.data.data.products[i].discount;
+            that.Product.Subtotal = response.data.data.products[i].subtotal;
+            
+            that.Products[i] = that.Product;
+            that.plusitem();
+          }
+
+          that.Quotation.Project_Name = response.data.data.quotation.project_Name;
+        
+          that.Remark1 = response.data.data.quotation.remark[0];
+          that.Remark2 = response.data.data.quotation.remark[1];
+          that.Remark3 = response.data.data.quotation.remark[2];
+          that.Remark4 = response.data.data.quotation.remark[3];
+          that.Remark5 = response.data.data.quotation.remark[4];
+          that.Remark6 = response.data.data.quotation.remark[5];
+          that.Remark7 = response.data.data.quotation.remark[6];        
+        })
+        .catch(function (error) {
+          console.log(error);
+        });
+      }      
+    },
+  
     btKeyUp(e) {
       e.target.value = e.target.value.replace(
         /[`~!@#$%^&*()_\\+=<>?:"{}|,./;'\\[\]·~！@#￥%……&*（）——\-+={}|《》？：“”【】、；‘’，。、]/g,
@@ -449,29 +491,39 @@ export default{
     searchCustomer(){
       const that = this;
       let search = that.Customer.Customer_Name;
-      this.$axios.get("https://1ace-220-135-155-67.ngrok.io/api/customer?search=" + search + "&search_In=1")
-      .then(function (response) {
-        that.Customer.Company_Name = response.data.data[0].company_Name;
-        that.Customer.Company_Phone = response.data.data[0].company_Phone;
-        that.Customer.Company_Fax = response.data.data[0].company_Fax;
-        that.Customer.Customer_ID = response.data.data[0].customer_ID;
-      })
-      .catch(function (error) {
-        console.log(error);
-      });
+      for(var i=0;i<that.Customers.length;i++){
+        if(that.Customers[i].customer_Name == search){
+          this.$api
+          .SearchCustomerName(search)
+          .then(function (response) {
+            that.Customer.Company_Name = response.data.data[0].company_Name;
+            that.Customer.Company_Phone = response.data.data[0].company_Phone;
+            that.Customer.Company_Fax = response.data.data[0].company_Fax;
+            that.Customer.Customer_ID = response.data.data[0].customer_ID;
+          })
+          .catch(function (error) {
+            console.log(error);
+          });
+        }
+      }      
     },
     searchCompany(){
       const that = this;
       let search = that.Customer.Company_Name;
-      this.$axios.get("https://1ace-220-135-155-67.ngrok.io/api/customer?search=" + search + "&search_In=2")
-      .then(function (response) {
-        that.Customer.Company_Phone = response.data.data[0].company_Phone;
-        that.Customer.Company_Fax = response.data.data[0].company_Fax;
-        that.Customer.Customer_ID = response.data.data[0].customer_ID;
-      })
-      .catch(function (error) {
-        console.log(error);
-      });
+      for(var i=0;i<that.Customers.length;i++){
+        if(that.Customers[i].company_Name == search){
+          this.$api
+          .SearchCompany(search)
+          .then(function (response) {
+            that.Customer.Company_Phone = response.data.data[0].company_Phone;
+            that.Customer.Company_Fax = response.data.data[0].company_Fax;
+            that.Customer.Customer_ID = response.data.data[0].customer_ID;
+          })
+          .catch(function (error) {
+            console.log(error);
+          });
+        }
+      }      
     },   
 
     getallProducts(){
@@ -495,16 +547,22 @@ export default{
       const that = this;
       let search = that.Product.Product_Name;
       let searchPrice;
-      this.$axios.get("https://1ace-220-135-155-67.ngrok.io/api/product?user_id=1&token=SMoQMA3y9mXkJ2qr8Loc&Search=" + search)
-      .then(function (response) {        
-        searchPrice = response.data.data[0].price;
-        that.Product.Price = searchPrice;
-        that.changePrice();
-        that.changeSubtotal();
-      })
-      .catch(function (error) {
-        console.log(error);
-      });
+      for(var i=0;i<that.allProducts.length;i++){
+        if(that.allProducts[i].product_Name == search){
+          this.$api
+          .Searchproduce(search)
+          .then(function (response) {        
+            searchPrice = response.data.data[0].price;
+            that.Product.Price = searchPrice;
+            that.changePrice();
+            that.changeSubtotal();
+          })
+          .catch(function (error) {
+            console.log(error);
+          });
+        }
+      }     
+      
     },
     
     plusitem(){
@@ -566,7 +624,8 @@ export default{
       }
       this.Stotal = stotal;
       this.Rtotal = stotal*0.05;
-      this.Quotation.total = this.Stotal + this.Rtotal;
+      this.Rtotal = this.Rtotal.toFixed(2);
+      this.Quotation.total = this.Stotal + parseInt(this.Rtotal);
     },
 
     
@@ -679,6 +738,7 @@ export default{
         .catch(function (error) {
           console.log(error);
         }); 
+        console.log(form);
       }
     },
     
