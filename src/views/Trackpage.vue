@@ -25,6 +25,15 @@
             @input="postisback()"
           ></b-form-select>
         </b-col>
+        <b-row class="upper">
+          <b-col class="tracks">進度</b-col>
+          <b-col class="quotationsID">報價單編號</b-col>
+          <b-col class="trackprojects">專案名稱</b-col>
+          <b-col class="trackremarks">備註</b-col>
+          <b-col class="trackedits">付款狀態</b-col>
+          <b-col class="trackdeletes">編輯</b-col>
+        </b-row>
+        <hr />
         <b-col md="9" class="main">
           <b-col
             class="inbox"
@@ -41,17 +50,26 @@
                 {{ item.status }}
               </div>
             </div>
-            <div class="trackdata" v-bind:class="{ voidcolor: check(item.status) }">
+            <div
+              class="trackdata"
+              v-bind:class="{ voidcolor: check(item.status) }"
+            >
               <div class="innerdiv">{{ item.quotation_ID }}</div>
             </div>
 
-            <div class="projectname" v-bind:class="{ voidcolor: check(item.status) }">
+            <div
+              class="projectname"
+              v-bind:class="{ voidcolor: check(item.status) }"
+            >
               <div class="innerdiv" :title="item.project_Name">
                 {{ item.project_Name }}
               </div>
             </div>
 
-            <div class="remark" v-bind:class="{ voidcolor: check(item.status) }">
+            <div
+              class="remark"
+              v-bind:class="{ voidcolor: check(item.status) }"
+            >
               <div class="innerdiv" :title="item.remark">
                 {{ item.project_Remark }}
               </div>
@@ -80,7 +98,10 @@
                 />
               </div>
             </div>
-            <div class="delete" v-bind:class="{ voidcolor: check(item.status) }">
+            <div
+              class="delete"
+              v-bind:class="{ voidcolor: check(item.status) }"
+            >
               <div class="mainicon">
                 <font-awesome-icon
                   class="uploadicon"
@@ -144,7 +165,8 @@ export default {
   },
   methods: {
     get_data: function () {
-      this.$api.Gettrack()
+      this.$api
+        .Gettrack()
         .then((response) => {
           this.items = response.data.data;
           for (var i = 0; i < this.items.length; i++) {
@@ -163,7 +185,8 @@ export default {
       if (this.trackselected == 1 && this.payselected == 1) {
         this.get_data();
       } else {
-        this.$api.Getselect(this.trackselected,this.payselected)
+        this.$api
+          .Getselect(this.trackselected, this.payselected)
           .then(function (response) {
             that.items = response.data.data;
             for (var i = 0; i < that.items.length; i++) {
@@ -179,11 +202,12 @@ export default {
       }
     },
     SendSearch() {
-      const that = this;       
+      const that = this;
       if (this.search == "") {
         this.get_data();
       } else {
-        this.$api.Getsearch(this.trackselected,this.payselected,this.search)
+        this.$api
+          .Getsearch(this.trackselected, this.payselected, this.search)
           .then(function (response) {
             console.log(response);
             that.items = response.data.data;
@@ -207,10 +231,9 @@ export default {
       this.$router.push("edittrackpage");
     },
     check(status) {
-      if(status=="作廢"){
+      if (status == "作廢") {
         return true;
-      }
-      else{
+      } else {
         return false;
       }
     },
@@ -257,7 +280,7 @@ export default {
 }
 .projectname {
   display: inline-block;
-  width: 300px;
+  width: 320px;
   height: 100px;
   text-align: center;
   line-height: 100px;
@@ -265,10 +288,33 @@ export default {
   border-left: none;
 }
 .voidcolor {
-  
-  background-color: #BEBEBE;
+  background-color: #bebebe;
 }
-.moneyicon{
+.moneyicon {
   padding-top: 25px;
+}
+.tracks {
+  position: relative;
+  left: 55px;
+}
+.quotationsID{
+  position: relative;
+  left: -95px;
+}
+.trackprojects{
+  position: relative;
+  left: -105px;
+}
+.trackremarks{
+    position: relative;
+  left: 130px;
+}
+.trackedits{
+     position: relative;
+  left: 220px;
+}
+.trackdeletes{
+       position: relative;
+ margin-left: 100px;
 }
 </style>

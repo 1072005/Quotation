@@ -19,6 +19,17 @@
             @input="postisback(selected)"
           ></b-form-select>
         </b-col>
+        <b-row class="upper">
+          <b-col class="quotationID">報價單編號</b-col>
+          <b-col class="company">公司</b-col>
+          <b-col class="projects">專案名稱</b-col>
+          <b-col class="download">下載報價單</b-col>
+          <b-col class="reback">上傳回簽檔</b-col>
+          <b-col class="reviews">預覽</b-col>
+          <b-col class="edits">編輯</b-col>
+          <b-col class="deletes">刪除</b-col>
+        </b-row>
+        <hr />
         <b-col md="9" class="main">
           <b-col
             class="inbox"
@@ -65,9 +76,9 @@
                   v-if="item.isSignback != true"
                   @click="
                     storedata(
-                      items[index].quotation_ID,
-                      items[index].company_Name,
-                      items[index].project_Name
+                      item.quotation_ID,
+                      item.company_Name,
+                      item.project_Name
                     )
                   "
                 />
@@ -89,7 +100,7 @@
                   :icon="['far', 'eye']"
                   style="color: black"
                   size="4x"
-                  @click="viewdata(items[index].quotation_ID)"
+                  @click="viewdata(item.quotation_ID)"
                 />
               </div>
             </div>
@@ -188,6 +199,10 @@ export default {
     },
     downloadpdf(index) {
       const that = this;
+      if (that.currentPage != 1) {
+        index = 6 * that.currentPage - 6 + index;
+      }
+      console.log(index);
       this.$api
         .PDF(this.items[index].quotation_ID)
         .then(function (response) {
@@ -199,12 +214,20 @@ export default {
         });
     },
     goeditform(index) {
+       const that = this;
+      if (that.currentPage != 1) {
+        index = 6 * that.currentPage - 6 + index;
+      }
       const id = this.items[index].quotation_ID;
       localStorage.setItem("editformID", id);
       this.$router.push("Form");
     },
     deleteupload(index) {
       let result = window.confirm("確定要刪除回簽檔嗎");
+       const that = this;
+      if (that.currentPage != 1) {
+        index = 6 * that.currentPage - 6 + index;
+      }
       if (result == true) {
         this.$api
           .DeletePDF(this.items[index].quotation_ID)
@@ -234,6 +257,10 @@ export default {
       }
     },
     deletedata(index) {
+       const that = this;
+      if (that.currentPage != 1) {
+        index = 6 * that.currentPage - 6 + index;
+      }
       let result = window.confirm("確定要刪除檔案嗎?");
       if (result == true) {
         this.$api
@@ -259,13 +286,13 @@ export default {
       this.$router.push({ path: "upload" });
     },
     viewdata(ID) {
-      var route = this.$router.resolve({path:'/Review'});
+      var route = this.$router.resolve({ path: "/Review" });
       const viewinfo = {
         id: ID,
       };
       console.log(viewinfo);
       localStorage.setItem("viewlocaldata", JSON.stringify(viewinfo));
-      window.open(route.href,'_blank');
+      window.open(route.href, "_blank");
     },
   },
   mounted() {
@@ -281,7 +308,7 @@ export default {
 
 <style >
 .rightside {
-  height: 100vh;
+  height: 105vh;
   background-color: white !important;
 }
 .rightside h1 {
@@ -297,7 +324,7 @@ export default {
   display: inline;
 }
 .main {
-  margin-top: 40px;
+  margin-top: 10px;
   margin-left: 20px;
 }
 .dateleft {
@@ -320,6 +347,7 @@ export default {
   border-left: none;
 }
 .innerdiv {
+  font-size: 1.2rem;
   overflow: hidden;
   white-space: nowrap;
   text-overflow: ellipsis;
@@ -328,6 +356,12 @@ export default {
 .inbox {
   margin-top: 20px;
   width: 120%;
+}
+.upper {
+  margin-top: 20px !important;
+  font-size: 1.3rem;
+  font-weight: bold;
+  margin-bottom: -15px !important;
 }
 .produce {
   display: inline-block;
@@ -420,5 +454,37 @@ export default {
 .trashicon {
   cursor: pointer;
   padding-top: 25px;
+}
+.quotationID{
+  position: relative;
+  left: 40px;
+}
+.company{
+  position: relative;
+ left: 80px;
+}
+.projects{
+  position: relative;
+  left: 210px;
+}
+.download{
+  position: relative;
+  left: 273px;
+}
+.reback{
+  position: relative;
+  left: 190px;
+}
+.reviews{
+    position: relative;
+  left: 130px;
+}
+.edits{
+  position: relative;
+  left: 43px;
+}
+.deletes{
+    position: relative;
+  right: 45px;
 }
 </style>

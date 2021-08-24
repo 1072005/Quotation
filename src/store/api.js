@@ -2,11 +2,11 @@ import axios from 'axios'
 import store from './index'
 
 const instance = axios.create({
-    baseURL: 'https://1ace-220-135-155-67.ngrok.io/api/'
+    baseURL: 'http://e3f7-220-135-155-67.ngrok.io/api/'
     //   baseURL: 'api/v1'
 })
 const download = axios.create({
-    baseURL: 'https://1ace-220-135-155-67.ngrok.io/api/',
+    baseURL: 'http://e3f7-220-135-155-67.ngrok.io/api/',
     responseType: 'blob'
     //   baseURL: 'api/v1'
 })
