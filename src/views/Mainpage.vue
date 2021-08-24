@@ -358,10 +358,10 @@ export default {
   width: 120%;
 }
 .upper {
-  margin-top: 20px !important;
+  
   font-size: 1.3rem;
   font-weight: bold;
-  margin-bottom: -15px !important;
+  margin-bottom: -15px ;
 }
 .produce {
   display: inline-block;
@@ -486,5 +486,8 @@ export default {
 .deletes{
     position: relative;
   right: 45px;
+}
+.rightside .row{
+   margin-top: 20px 
 }
 </style>
