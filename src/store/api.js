@@ -158,4 +158,4 @@ export const SearchCompany = (CompanySearch) => instance.get('customer?search=' 
 
 // [填寫表單頁面]
 /**  送出表單 */
-export const PostForm = (Form) => instance.post('/quotation',Form);
+export const PostForm = (Form) => download.post('/quotation',Form);
