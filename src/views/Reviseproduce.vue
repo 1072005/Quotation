@@ -196,7 +196,7 @@ export default {
 }
 .produces{
   position: relative;
-  left: 365px;
+  left: 360px;
 }
 .producesprice{
   position: relative;
