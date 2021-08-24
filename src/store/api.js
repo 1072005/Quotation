@@ -43,7 +43,7 @@ download.interceptors.request.use(
 export const UserLogin = data => instance.post('users/signin', data);
 
 /** sidebar顯示帳號 */
-export const Getuser = () => instance.get('users/' + store.state.userName);
+export const Getuser = () => instance.get('users/');
 
 // [主頁面]
 /** 列出報價單 */

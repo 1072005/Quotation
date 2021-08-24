@@ -11,7 +11,13 @@
             v-on:keyup.enter="SendSearch()"
           ></b-form-input>
         </b-col>
-
+        <b-row class="upper">
+          <b-col class="produces">產品規格</b-col>
+          <b-col class="producesprice">產品單價</b-col>
+          <b-col class="producesedits">編輯</b-col>
+          <b-col class="producesdeletes">刪除</b-col>
+        </b-row>
+        <hr />
         <b-col md="9" class="main">
           <b-col
             class="inbox"
@@ -95,7 +101,8 @@ export default {
   },
   methods: {
     get_data: function () {
-      this.$api.Getproduce()
+      this.$api
+        .Getproduce()
         .then((response) => {
           this.items = response.data.data;
         })
@@ -117,7 +124,8 @@ export default {
       if (this.search == "") {
         this.get_data();
       } else {
-        this.$api.Searchproduce(this.search)
+        this.$api
+          .Searchproduce(this.search)
           .then(function (response) {
             console.log(response);
             that.items = response.data.data;
@@ -129,8 +137,13 @@ export default {
     },
     deletedata(index) {
       let result = window.confirm("確定要刪除檔案嗎?");
+      const that = this;
+      if (that.currentPage != 1) {
+        index = 6 * that.currentPage - 6 + index;
+      }
       if (result == true) {
-        this.$api.Deleteproduce(this.items[index].product_ID)
+        this.$api
+          .Deleteproduce(this.items[index].product_ID)
           .then(function (response) {
             if (response.data.status_Code == 2000) {
               window.location.reload();
@@ -151,7 +164,7 @@ export default {
 
 <style scoped lang="scss">
 .rightside {
-  height: 100vh;
+  height: 105vh;
   background-color: white !important;
 }
 .rightside h1 {
@@ -181,4 +194,21 @@ export default {
   border: solid 1px black;
   border-left: none;
 }
+.produces{
+  position: relative;
+  left: 360px;
+}
+.producesprice{
+  position: relative;
+  left: 770px;
+}
+.producesedits{
+  position: relative;
+  margin-left: 870px;
+}
+.producesdeletes{
+    position: relative;
+  right: 70px;
+}
+
 </style>
