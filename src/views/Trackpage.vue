@@ -297,24 +297,24 @@ export default {
   position: relative;
   left: 55px;
 }
-.quotationsID{
+.quotationsID {
   position: relative;
   left: -95px;
 }
-.trackprojects{
+.trackprojects {
   position: relative;
   left: -105px;
 }
-.trackremarks{
-    position: relative;
+.trackremarks {
+  position: relative;
   left: 130px;
 }
-.trackedits{
-     position: relative;
+.trackedits {
+  position: relative;
   left: 220px;
 }
-.trackdeletes{
-       position: relative;
- margin-left: 100px;
+.trackdeletes {
+  position: relative;
+  margin-left: 100px;
 }
 </style>

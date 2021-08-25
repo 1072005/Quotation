@@ -182,7 +182,6 @@ export default {
     SendSearch() {
       let Search = this.search;
       const that = this;
-      console.log(Search);
       if (Search == "") {
         this.get_data();
       } else {
@@ -202,7 +201,6 @@ export default {
       if (that.currentPage != 1) {
         index = 6 * that.currentPage - 6 + index;
       }
-      console.log(index);
       this.$api
         .PDF(this.items[index].quotation_ID)
         .then(function (response) {
@@ -214,7 +212,7 @@ export default {
         });
     },
     goeditform(index) {
-       const that = this;
+      const that = this;
       if (that.currentPage != 1) {
         index = 6 * that.currentPage - 6 + index;
       }
@@ -224,7 +222,7 @@ export default {
     },
     deleteupload(index) {
       let result = window.confirm("確定要刪除回簽檔嗎");
-       const that = this;
+      const that = this;
       if (that.currentPage != 1) {
         index = 6 * that.currentPage - 6 + index;
       }
@@ -257,7 +255,7 @@ export default {
       }
     },
     deletedata(index) {
-       const that = this;
+      const that = this;
       if (that.currentPage != 1) {
         index = 6 * that.currentPage - 6 + index;
       }
@@ -281,7 +279,6 @@ export default {
         company: company_name,
         project: project_name,
       };
-      console.log(info);
       localStorage.setItem("localdata", JSON.stringify(info));
       this.$router.push({ path: "upload" });
     },
@@ -290,13 +287,13 @@ export default {
       const viewinfo = {
         id: ID,
       };
-      console.log(viewinfo);
       localStorage.setItem("viewlocaldata", JSON.stringify(viewinfo));
       window.open(route.href, "_blank");
     },
   },
   mounted() {
     this.get_data();
+    localStorage.removeItem("viewlocaldata");
   },
   computed: {
     rows() {
@@ -358,10 +355,9 @@ export default {
   width: 120%;
 }
 .upper {
-  
   font-size: 1.3rem;
   font-weight: bold;
-  margin-bottom: -15px ;
+  margin-bottom: -15px;
 }
 .produce {
   display: inline-block;
@@ -455,39 +451,39 @@ export default {
   cursor: pointer;
   padding-top: 25px;
 }
-.quotationID{
+.quotationID {
   position: relative;
   left: 40px;
 }
-.company{
+.company {
   position: relative;
- left: 80px;
+  left: 80px;
 }
-.projects{
+.projects {
   position: relative;
   left: 210px;
 }
-.download{
+.download {
   position: relative;
   left: 273px;
 }
-.reback{
+.reback {
   position: relative;
   left: 190px;
 }
-.reviews{
-    position: relative;
+.reviews {
+  position: relative;
   left: 130px;
 }
-.edits{
+.edits {
   position: relative;
   left: 43px;
 }
-.deletes{
-    position: relative;
+.deletes {
+  position: relative;
   right: 45px;
 }
-.rightside .row{
-   margin-top: 20px 
+.rightside .row {
+  margin-top: 20px;
 }
 </style>

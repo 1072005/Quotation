@@ -3,9 +3,9 @@
     <Sidebar></Sidebar>
     <b-row>
       <b-col md="10" offset-md="2" class="rightside">
-        <b-col md-3 class="data"> {{items.id}}</b-col>
-        <b-col offset-md="2" md-4 class="company"> {{items.company}}</b-col>
-        <b-col offset-md="3" md-3 class="project"> {{items.project}}</b-col>
+        <b-col md-3 class="data"> {{ items.id }}</b-col>
+        <b-col offset-md="2" md-4 class="company"> {{ items.company }}</b-col>
+        <b-col offset-md="3" md-3 class="project"> {{ items.project }}</b-col>
         <b-col class="selet">
           <b-form-file
             v-model="file"
@@ -42,7 +42,6 @@ export default {
   },
   data() {
     return {
-      
       file: null,
       items: [],
       formData: new FormData(),
@@ -53,14 +52,15 @@ export default {
       this.formData.append("file", e.target.files[0]); //放進上傳的檔案
     },
     postdata() {
-      const that=this;
-      this.$api.UploadPDF(that.items.id,that.formData)
+      const that = this;
+      this.$api
+        .UploadPDF(that.items.id, that.formData)
         .then(function (response) {
-          console.log(response)
+          console.log(response);
           if (response.data.status_Code == 2000) {
             alert(that.file.name + "上傳成功");
             that.$router.push({ path: "Mainpage" });
-            localStorage.removeItem('localdata');
+            localStorage.removeItem("localdata");
           } else {
             alert(response.data.message);
             //  window.location.reload();
@@ -70,17 +70,15 @@ export default {
           console.log(error);
         });
     },
-    clearlocaldata(){
-      localStorage.removeItem('localdata');
-      this.$router.push('Mainpage')
-    }
-    
+    clearlocaldata() {
+      localStorage.removeItem("localdata");
+      this.$router.push("Mainpage");
+    },
   },
-  mounted(){
-    var data1 = JSON.parse(localStorage.getItem('localdata'));
-    this.items=data1
-   
-  }
+  mounted() {
+    var data1 = JSON.parse(localStorage.getItem("localdata"));
+    this.items = data1;
+  },
 };
 </script>
 

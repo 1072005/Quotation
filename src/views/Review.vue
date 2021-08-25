@@ -36,13 +36,13 @@
         </b-col>
         <b-col md="6">
           <p align="right"><b>日期&emsp;&emsp;</b></p>
-          <p align="right" ><b>報價單編號&emsp;&emsp;</b></p>
+          <p align="right"><b>報價單編號&emsp;&emsp;</b></p>
           <p align="right"><b>客戶統一編號&emsp;&emsp;</b></p>
           <p align="right"><i>報價有效期至&emsp;&emsp;</i></p>
         </b-col>
         <b-col md="2">
           <p>{{ today_Date }}</p>
-          <p >{{text}}</p>
+          <p>{{ text }}</p>
           <p>{{ Customer.Customer_ID }}</p>
           <p>{{ last_Date }}</p>
         </b-col>
@@ -81,7 +81,12 @@
               <p align="center">{{ index + 1 }}</p>
             </b-col>
             <b-col id="border2" md="4">
-              <p>{{ item.product_Name }}<br />{{ item.product_Detail }}</p>
+              <p>{{ item.product_Name }}</p>
+              <p
+                v-html="item.product_Detail.replace(/(\r\n|\n|\r)/gm, ' <br/>')"
+              >
+                {{ item.product_Detail }}
+              </p>
             </b-col>
             <b-col id="border2">
               <p align="center">{{ item.amount }}</p>
@@ -195,7 +200,7 @@ export default {
         Company_Fax: "",
         Customer_ID: "",
       },
-      text:'報價單編號',
+      text: "報價單編號",
       Product: {
         product_ID: "",
         product_Name: "",
@@ -230,91 +235,93 @@ export default {
   },
 
   mounted() {
-    this.user_id = window.sessionStorage.getItem("user_id");
-    // console.log(this.user_id);
-    this.Customer.Customer_Name =
-      window.sessionStorage.getItem("Customer_Name");
-    this.Customer.Company_Name = window.sessionStorage.getItem("Company_Name");
-    this.Customer.Company_Phone =
-      window.sessionStorage.getItem("Company_Phone");
-    this.Customer.Company_Fax = window.sessionStorage.getItem("Company_Fax");
-    this.Customer.Customer_ID = window.sessionStorage.getItem("Customer_ID");
-    // console.log(this.Customer);
-    this.Remark1 = window.sessionStorage.getItem("Remark1");
-    this.Remark2 = window.sessionStorage.getItem("Remark2");
-    this.Remark3 = window.sessionStorage.getItem("Remark3");
-    this.Remark4 = window.sessionStorage.getItem("Remark4");
-    this.Remark5 = window.sessionStorage.getItem("Remark5");
-    this.Remark6 = window.sessionStorage.getItem("Remark6");
-    this.Remark7 = window.sessionStorage.getItem("Remark7");
-
-    this.Quotation.total = window.sessionStorage.getItem("total");
-
-    this.Stotal = window.sessionStorage.getItem("Stotal");
-    this.Rtotal = window.sessionStorage.getItem("Rtotal");
-    this.i = window.sessionStorage.getItem("i");
-
-    for (var j = 0; j < parseInt(this.i); j++) {
-      this.Product.product_ID = j + 1;
-      this.Product.product_Name = window.sessionStorage.getItem(
-        "product_Name" + j
-      );
-      this.Product.product_Detail = window.sessionStorage.getItem(
-        "product_Detail" + j
-      );
-      this.Product.amount = window.sessionStorage.getItem("amount" + j);
-      this.Product.price = window.sessionStorage.getItem("price" + j);
-      this.Product.discount = window.sessionStorage.getItem("discount" + j);
-      this.Product.subtotal = window.sessionStorage.getItem("subtotal" + j);
-
-      this.Products[j] = this.Product;
-      this.Product = {};
-    }
-    var Today = new Date();
-    var Last = new Date();
-    Last = Last.setDate(Last.getDate() + 30);
-    Last = new Date(Last);
-    this.today_Date =
-      Today.getFullYear() +
-      "/" +
-      (Today.getMonth() + 1) +
-      "/" +
-      Today.getDate();
-    this.last_Date =
-      Last.getFullYear() + "/" + (Last.getMonth() + 1) + "/" + Last.getDate();
-
     var data1 = JSON.parse(localStorage.getItem("viewlocaldata"));
-    this.items = data1;
-    const that = this;
-    this.$api
-      .GetViewData(this.items.id)
-      .then(function (response) {
-        console.log(response);
-        that.Customer.Customer_Name = response.data.data.customer.customer_Name;
-        that.Customer.Company_Name = response.data.data.customer.company_Name;
-        that.Customer.Company_Phone = response.data.data.customer.company_Phone;
-        that.Customer.Company_Fax = response.data.data.customer.company_Fax;
-        that.Customer.Customer_ID = response.data.data.customer.customer_ID;
-        that.Products = response.data.data.products;
-        that.Stotal = response.data.data.quotation.total;
-        that.Quotation.total = response.data.data.quotation.total_withTax;
-        that.Rtotal = response.data.data.quotation.tax;
-        that.today_Date=response.data.data.quotation.date;
-        that.last_Date=response.data.data.quotation.quotation_Deadline;
-        that.Remark1=response.data.data.quotation.remark[0];
-        that.Remark2=response.data.data.quotation.remark[1];
-        that.Remark3=response.data.data.quotation.remark[2];
-        that.Remark4=response.data.data.quotation.remark[3];
-        that.Remark5=response.data.data.quotation.remark[4];
-        that.Remark6=response.data.data.quotation.remark[5];
-        that.Remark7=response.data.data.quotation.remark[6];
-        that.text=that.items.id;
+    if (data1 != null) {
+      this.items = data1;
+      const that = this;
+      this.$api
+        .GetViewData(this.items.id)
+        .then(function (response) {
+          console.log(response);
+          that.Customer.Customer_Name =
+            response.data.data.customer.customer_Name;
+          that.Customer.Company_Name = response.data.data.customer.company_Name;
+          that.Customer.Company_Phone =
+            response.data.data.customer.company_Phone;
+          that.Customer.Company_Fax = response.data.data.customer.company_Fax;
+          that.Customer.Customer_ID = response.data.data.customer.customer_ID;
+          that.Products = response.data.data.products;
+          that.Stotal = response.data.data.quotation.total;
+          that.Quotation.total = response.data.data.quotation.total_withTax;
+          that.Rtotal = response.data.data.quotation.tax;
+          that.today_Date = response.data.data.quotation.date;
+          that.last_Date = response.data.data.quotation.quotation_Deadline;
+          that.Remark1 = response.data.data.quotation.remark[0];
+          that.Remark2 = response.data.data.quotation.remark[1];
+          that.Remark3 = response.data.data.quotation.remark[2];
+          that.Remark4 = response.data.data.quotation.remark[3];
+          that.Remark5 = response.data.data.quotation.remark[4];
+          that.Remark6 = response.data.data.quotation.remark[5];
+          that.Remark7 = response.data.data.quotation.remark[6];
+          that.text = that.items.id;
+        })
+        .catch(function (error) {
+          console.log(error);
+        });
+    } else {
+      this.user_id = window.sessionStorage.getItem("user_id");
+      // console.log(this.user_id);
+      this.Customer.Customer_Name =
+        window.sessionStorage.getItem("Customer_Name");
+      this.Customer.Company_Name =
+        window.sessionStorage.getItem("Company_Name");
+      this.Customer.Company_Phone =
+        window.sessionStorage.getItem("Company_Phone");
+      this.Customer.Company_Fax = window.sessionStorage.getItem("Company_Fax");
+      this.Customer.Customer_ID = window.sessionStorage.getItem("Customer_ID");
+      // console.log(this.Customer);
+      this.Remark1 = window.sessionStorage.getItem("Remark1");
+      this.Remark2 = window.sessionStorage.getItem("Remark2");
+      this.Remark3 = window.sessionStorage.getItem("Remark3");
+      this.Remark4 = window.sessionStorage.getItem("Remark4");
+      this.Remark5 = window.sessionStorage.getItem("Remark5");
+      this.Remark6 = window.sessionStorage.getItem("Remark6");
+      this.Remark7 = window.sessionStorage.getItem("Remark7");
 
+      this.Quotation.total = window.sessionStorage.getItem("total");
 
-      })
-      .catch(function (error) {
-        console.log(error);
-      });
+      this.Stotal = window.sessionStorage.getItem("Stotal");
+      this.Rtotal = window.sessionStorage.getItem("Rtotal");
+      this.i = window.sessionStorage.getItem("i");
+      for (var j = 0; j < parseInt(this.i); j++) {
+        this.Product.product_ID = j + 1;
+        this.Product.product_Name = window.sessionStorage.getItem(
+          "Product_Name" + j
+        );
+        this.Product.product_Detail = window.sessionStorage.getItem(
+          "Product_Detail" + j
+        );
+        this.Product.amount = window.sessionStorage.getItem("Amount" + j);
+        this.Product.price = window.sessionStorage.getItem("Price" + j);
+        this.Product.discount = window.sessionStorage.getItem("Discount" + j);
+        this.Product.subtotal = window.sessionStorage.getItem("Subtotal" + j);
+
+        this.Products[j] = this.Product;
+        this.Product = {};
+      }
+      var Today = new Date();
+      var Last = new Date();
+      Last = Last.setDate(Last.getDate() + 30);
+      Last = new Date(Last);
+      this.today_Date =
+        Today.getFullYear() +
+        "/" +
+        (Today.getMonth() + 1) +
+        "/" +
+        Today.getDate();
+      this.last_Date =
+        Last.getFullYear() + "/" + (Last.getMonth() + 1) + "/" + Last.getDate();
+    }
   },
 };
 </script>

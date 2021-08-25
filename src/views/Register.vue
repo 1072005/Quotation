@@ -102,7 +102,7 @@ export default {
       } 
       else {
         this.$axios
-          .post("https://1ace-220-135-155-67.ngrok.io/api/users/signup", parms)
+          .post("http://e3f7-220-135-155-67.ngrok.io/api/users/signup", parms)
           .then(function (response) {
             console.log(response);
             if (response.data.status_Code == 2000) {

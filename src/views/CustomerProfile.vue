@@ -11,7 +11,7 @@
             v-on:keyup.enter="SendSearch()"
           ></b-form-input>
         </b-col>
-    <b-row class="upper">
+        <b-row class="upper">
           <b-col class="produces">客戶名稱</b-col>
           <b-col class="producesprice">公司名稱</b-col>
           <b-col class="producesedits">編輯</b-col>
@@ -125,12 +125,13 @@ export default {
     },
     deletedata(index) {
       let result = window.confirm("確定要刪除這筆資料嗎");
-             const that = this;
+      const that = this;
       if (that.currentPage != 1) {
         index = 6 * that.currentPage - 6 + index;
       }
       if (result == true) {
-        this.$api.Deletecustomer(this.items[index].customer_ID)
+        this.$api
+          .Deletecustomer(this.items[index].customer_ID)
           .then(function (response) {
             if (response.data.status_Code == 2000) {
               window.location.reload();
@@ -146,10 +147,11 @@ export default {
       if (this.search == "") {
         this.get_data();
       } else {
-        this.$api.Searchcustomer(that.search)
+        this.$api
+          .Searchcustomer(that.search)
           .then(function (response) {
             that.items = response.data.data;
-            console.log(response)
+            console.log(response);
           })
           .catch(function (error) {
             console.log(error);
@@ -185,28 +187,27 @@ export default {
 }
 .customerproduce {
   display: inline-block;
-  width: 885px;
+  width: 870px;
   height: 100px;
   text-align: center;
   line-height: 100px;
   border: solid 1px black;
   border-left: none;
 }
-.produces{
+.produces {
   position: relative;
   left: 130px;
 }
-.producesprice{
+.producesprice {
   position: relative;
   left: 540px;
 }
-.producesedits{
+.producesedits {
   position: relative;
   margin-left: 870px;
 }
-.producesdeletes{
-    position: relative;
+.producesdeletes {
+  position: relative;
   right: 70px;
 }
-
 </style>
